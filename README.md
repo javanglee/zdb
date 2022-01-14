@@ -24,6 +24,7 @@ This package is very easy to use:
 You can input data parameter with float timestamp or string datetime format to init the Time class instance.
 
 from zdb import Time, Timeseries
+
 t1 = Time(30000)
 
 t2 = Time(1000)
