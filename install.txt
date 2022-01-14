@@ -1,1 +1,0 @@
-c:\users\walkbob\appdata\local\programs\python\python310\lib\site-packages\zdb-1.1-py3.10.egg
