@@ -1,7 +1,11 @@
+# -*- coding=utf-8 -*-
+
 import datetime as dt
 import time
 import re
 import calendar
+
+from vdict import *
 
 '''
 这个包的设计是模仿pathlib的，我们管这种设计方式叫基于群论的软件工程设计方法。
@@ -212,9 +216,17 @@ class Time():
     def fmt(self, fmt):
         return time.strftime( fmt , time.localtime(self.__timestamp) )
     
-    
+    def monthdiff(self, other):
+        pass
+
+    def yeardiff(self, other):
+        pass
+
+    def daydiff( self, other):
+        pass
+
     def __repr__(self):
-        return str( self.__timestamp )
+        return "{'timestamp':"+str(self.__timestamp) +","+"'datetime':"+"'"+self.fmt('%Y-%m-%d %H:%M:%S')+"'"+"}" 
 
     def __add__(self,other):
         if isinstance(other,int):
@@ -241,7 +253,6 @@ class Time():
 
 '''
 util time static method class
-
 '''
 def get_month_firstday_Time(t):
     this_month_firstday = dt.datetime(t.year,t.month, 1)
@@ -249,7 +260,6 @@ def get_month_firstday_Time(t):
 
 '''
 util time static method class
-
 '''
 def get_month_lastday_Time(t):
     this_month_lastday = calendar.monthrange(t.year, t.month)[1]
@@ -264,7 +274,7 @@ start  : Time() -> time series start time
 length : int    -> time series length
 freq   : float  -> time unit (default 86400 second), you can input any second value for example 10.1 second
 
-Timeseries()                      -> current month day series
+Timeseries()                           -> current month day series
 Timeseries( end_time )                 -> end day to the first day of the month of the end
 Timeseries( end_time, length )         -> end day backtrace the length days
 Timeseries( end_time, length, freq )   -> end day backtrace the length with freqs 
@@ -284,15 +294,12 @@ class Timeseries():
 
             first_day = get_month_firstday_Time(self.__end_time)
             self.__length =int( (self.__end_time - first_day)/86400 )
-            print( 'self.__length is ', self.__length)
 
             for i in range(self.__length):
-                print( self.__end_time - i*86400 )
                 self.__list.append( self.__end_time -(self.__length- i)*86400 )
             self.__list.append(self.__end_time)
-            print( self.__list )
 
-        if len(args) >= 1:
+        elif len(args) == 1:
             self.__end_time = Time(args[0])
             first_day = get_month_firstday_Time(self.__end_time)
             self.__length = int( (self.__end_time - first_day)/86400 )
@@ -302,23 +309,30 @@ class Timeseries():
                 self.__list.append( self.__end_time - (self.__length - i)*86400 )
             self.__list.append(self.__end_time)
 
-        if len(args) >= 2:
+        elif len(args) == 2: #
             self.__end_time =Time(args[0])
             self.__length = args[1] # default freq is day=24*60*60=86400 
+
             for i in range(self.__length):
-                self.__list.append( self.__end_time -(self.__length - i)*86400 )
+                self.__list.append( self.__end_time - (self.__length - i)*86400 )
             self.__list.append(self.__end_time)
 
-        if len(args) >= 3: # 
-            self.__end_time = args[0]
+        elif len(args) == 3: # 
+            self.__end_time = Time(args[0])
             self.__length = args[1]
             self.__freq = args[2]
+
             for i in range(self.__length):
-                self.__list.append( self.__end_time - (self.__length - i )*self.__freq )
+                self.__list.append( self.__end_time - ( self.__length - i )*self.__freq )
             self.__list.append(self.__end_time)
+        else:
+            raise TypeError("1-3 arguments should be given!")
 
     def fmt(self, fmt):
         return [x.fmt(fmt) for x in self.__list]
+
+    def __repr__(self):
+        return "['"+"','".join([x.fmt('%Y-%m-%d %H:%M:%S') for x in self.__list ] ) +"']"
 
     @property
     def length(self):
@@ -388,8 +402,20 @@ if __name__=='__main__':
     ts1 = Timeseries()
     ts2 = Timeseries('20210101')
     ts3 = Timeseries('20210131')
-    print( ts1.fmt('%Y-%m-%d') )
-    print( ts2.fmt('%Y-%m-%d'))
-    print( ts3.fmt('%Y-%m-%d'))
+    ts4 = Timeseries('20200901')
+    ts5 = Timeseries('20200430')
+    ts6 = Timeseries('20200228')
+    ts7 = Timeseries('20200228', 10)
+    ts8 = Timeseries('20200228', 10, 60)
+
+    print( 'ts1:', ts1.fmt('%Y-%m-%d') )
+    print( 'ts2:', ts2.fmt('%Y-%m-%d') )
+    print( 'ts3:', ts3.fmt('%Y-%m-%d') )
+    print( 'ts4:', ts4.fmt('%Y-%m-%d') )
+    print( 'ts5:', ts5.fmt('%Y-%m-%d') )
+    print( 'ts6:', ts6.fmt('%Y-%m-%d') )
+    print( 'ts7:', ts7 )
+    print( 'ts7:', ts7.fmt('%Y-%m-%d') )
+    print( 'ts8:', ts8.fmt('%Y-%m-%d %H:%M:%S'))
 
     #print( ts )
