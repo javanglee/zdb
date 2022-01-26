@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf8') as fh:
     long_description = fh.read()
 
 setup(
-    name="zdb",
+    name="richdb",
     version="0.0.1",
     author="javang.lee",
     author_email="walkbob@sina.com",
@@ -12,7 +12,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    url="http://themosthansomeman.com/", 
+    url="https://github.com/javanglee/zdb.git", 
     include_package_data = True,
     packages_data={
         'data_pkg':['data/default/']
@@ -20,7 +20,7 @@ setup(
 
     packages=find_packages(),
 
-    py_modules=['zdb','vdict','runlog', 'common/common'],
+    py_modules=['richdb','vdict','runlog', 'common/common'],
 
     classifiers=[
         "Programming Language :: Python :: 3",

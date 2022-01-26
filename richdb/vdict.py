@@ -20,7 +20,6 @@ lock = Lock()
 
 v_columns_names ={}
 
-
 class LineException(Exception):
     pass
 
@@ -74,8 +73,10 @@ class vdict:
 
     def set_column_name(self,i, name):
         with lock:
+            nameset = set( v_columns_names[self.__name] )
+            if name in nameset:
+                raise ValueError('the column name conflict!')
             v_columns_names[self.__name][i] = name
-
 
     def __next__(self):
         if self.__iter >=self.__len:
@@ -105,12 +106,25 @@ class vdict:
         return self.__list[key]
         
     def __setitem__(self, key, value):
+        vlen = len(v_columns_names[self.__name])
+        inflag = False
         if isinstance(key, str):
-            for i in range(len(v_columns_names[self.__name])):
+            for i in range(vlen):
                 if v_columns_names[self.__name][i] == key:
                     self.__list[i] = value
+                    inflag = True
+            if inflag == False:
+                v_columns_names[self.__name].insert(vlen, key)
+                self.__list.insert(vlen,value)
+                inflag = True
         elif isinstance(key, int):            
-            self.__list[key] = value
+            if key >= vlen:
+                for i in range(key-vlen+1):
+                    self.__list.insert(vlen+i, None)
+                    v_columns_names[self.__name].insert(vlen+i, str(vlen+i))
+                self.__list[key] = value
+            else:
+                self.__list[key] = value
 
     def __getslice__(self, i, j):
         return self.__list[i:j]
@@ -175,25 +189,15 @@ class vdict:
 
         datalist = datastr.replace('\r','').split('\n')
 
-        print( datalist )
 
         name = datalist[1] if datalist[1] is not None else str(id(self))
-        print( 'name is :', name)
         updatetime = datalist[2]
-        print( 'updatetime is :', updatetime)
         title = [ None if i == '' else i for i in datalist[3].split(',') ]
-        print( 'title is :', title)
         data = [ None if i == '' else i for i in datalist[4].split(',') ] 
 
-        print( 'data is :', data )
-        print( 'title is :', title )
-        print( 'name is :' , name ) 
         self.__list = data
         self.__name = name
-        print( 'self name is :', self.__name )
-        print( 'list data is :', self.__list )
         v_columns_names[self.__name] = title 
-        print( v_columns_names )
         columns = v_columns_names[self.__name]
         self.__columns = columns
 

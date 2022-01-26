@@ -1,13 +1,27 @@
-# -*- coding=utf-8 -*-
-
+#-*- encoding=utf8 -*-
 import datetime as dt
 import time
 import re
 import calendar
 
-from vdict import *
+from .util import get_strdate_format
 
 '''
+util time static method class
+'''
+def get_month_firstday_Time(t):
+    this_month_firstday = dt.datetime(t.year,t.month, 1)
+    return Time(this_month_firstday.strftime('%Y-%m-%d %H:%M:%S'))
+
+'''
+util time static method class
+'''
+def get_month_lastday_Time(t):
+    this_month_lastday = calendar.monthrange(t.year, t.month)[1]
+    return Time( dt.datetime(t.year, t.month, this_month_lastday).strftime('%Y-%m-%d %H:%M:%S') )
+
+'''
+设计的核心理念：为发财而生(born for rich)
 这个包的设计是模仿pathlib的，我们管这种设计方式叫基于群论的软件工程设计方法。
 this package is designed follow the pathlib's design method
 we call this kind design method : software design base on group theory
@@ -24,8 +38,6 @@ this package contains another design method.
 C数据集会因为数据错误的概率会因为传递而导致增加( sum(A)*a*(1-b) + sum(B)*b ) /sum(B)。
 当我们选择接口或者数据嵌套时，就需要深度评估，尤其加强测试。
 '''
-
-
 
 '''
 argument support 
@@ -55,119 +67,6 @@ date:
         '2021-01-02 12:12:12.1000000'   
         '2021/01/02 12:12:12.1000290'   
 '''
-
-def get_strdate_format(date):
-
-    fmt=None
-    #xxxx-xx-xx format time str 
-
-    mat = re.match(r"\d{4}", date)
-    if mat is not None:
-        fmt='%Y'
-
-    mat = re.match(r"\d{4}-\d{2}", date)
-    if mat is not None:
-        fmt='%Y-%m'
-
-    mat = re.match(r"\d{4}-\d{2}-\d{2}", date)
-    if mat is not None:
-        fmt='%Y-%m-%d'
-
-    mat= re.match(r"\d{4}-\d{2}-\d{2}\s+\d{2}", date)
-    if mat is not None:
-        fmt='%Y-%m-%d %H'
-
-    mat= re.match(r"\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y-%m-%d %H:%M'
-
-    mat= re.match(r"\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y-%m-%d %H:%M:%S'
-
-    mat = re.match(r"\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d+", date)
-    if mat is not None:
-        fmt='%Y-%m-%d %H:%M:%S.%f'
-
-    #xxxx.xx.xx format time str 
-
-    mat = re.match(r"\d{4}\.\d{2}", date)
-    if mat is not None:
-        fmt='%Y.%m'
-
-    mat = re.match(r"\d{4}\.\d{2}\.\d{2}", date)
-    if mat is not None:
-        fmt='%Y.%m.%d'
-
-    mat = re.match(r"\d{4}\.\d{2}\.\d{2}\s+\d{2}", date)
-    if mat is not None:
-        fmt='%Y.%m.%d %H'
-
-    mat = re.match(r"\d{4}\.\d{2}\.\d{2}\s+\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y.%m.%d %H:%M'
-
-    mat = re.match(r"\d{4}\.\d{2}\.\d{2}\s+\d{2}:\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y.%m.%d %H:%M:%S'
-
-    mat = re.match(r"\d{4}\.\d{2}\.\d{2}\s+\d{2}:\d{2}:\d{2}\.\d+", date)
-    if mat is not None:
-        fmt='%Y.%m.%d %H:%M:%S.%f'
-
-    #xxxx/xx/xx format time str 
-
-    mat = re.match(r"\d{4}/\d{2}", date)
-    if mat is not None:
-        fmt='%Y/%m'
-
-    mat = re.match(r"\d{4}/\d{2}/\d{2}", date)
-    if mat is not None:
-        fmt='%Y/%m/%d'
-
-    mat = re.match(r"\d{4}/\d{2}/\d{2}\s+\d{2}", date)
-    if mat is not None:
-        fmt='%Y/%m/%d %H'
-
-    mat = re.match(r"\d{4}/\d{2}/\d{2}\s+\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y/%m/%d %H:%M'
-
-    mat = re.match(r"\d{4}/\d{2}/\d{2}\s+\d{2}:\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y/%m/%d %H:%M:%S'
-
-    mat = re.match(r"\d{4}/\d{2}/\d{2}\s+\d{2}:\d{2}:\d{2}\.\d+", date)
-    if mat is not None:
-        fmt='%Y/%m/%d %H:%M:%S.%f'
-
-    #xxxxxxxx format time str 
-
-    mat = re.match(r"\d{4}\d{2}", date)
-    if mat is not None:
-        fmt='%Y%m'
-
-    mat = re.match(r"\d{4}\d{2}\d{2}", date)
-    if mat is not None:
-        fmt='%Y%m%d'
-
-    mat = re.match(r"\d{4}\d{2}\d{2}\s\d{2}", date)
-    if mat is not None:
-        fmt='%Y%m%d %H'
-
-    mat = re.match(r"\d{4}\d{2}\d{2}\s\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y%m%d %H:%M'
-
-    mat = re.match(r"\d{4}\d{2}\d{2}\s\d{2}:\d{2}:\d{2}", date)
-    if mat is not None:
-        fmt='%Y%m%d %H:%M:%S'
-
-    mat = re.match(r"\d{4}\d{2}\d{2}\s\d{2}:\d{2}:\d{2}\.\d+", date)
-    if mat is not None:
-        fmt='%Y%m%d %H:%M:%S.%f'
-
-    return fmt
 
 class Time():
     def __init__(self, *args):
@@ -215,15 +114,18 @@ class Time():
 
     def fmt(self, fmt):
         return time.strftime( fmt , time.localtime(self.__timestamp) )
-    
+
+    #两个时间日期之间相差的月份 20210103 - 20210205 = -1
     def monthdiff(self, other):
-        pass
+        return (self.year-other.year)*12 + (self.month-other.year)
 
+    #两个日期之间相差的年份 20210103 - 20220109 = -1
     def yeardiff(self, other):
-        pass
+        return (self.year-other.year)
 
+    #两个日期之间相差的天数，天数较为特殊不同于月与年的集合 20210101 12:20:30 - 20201230 01:10:03 = 2.465590277777778
     def daydiff( self, other):
-        pass
+        return (self-orther)/60.0/60.0/24.0
 
     def __repr__(self):
         return "{'timestamp':"+str(self.__timestamp) +","+"'datetime':"+"'"+self.fmt('%Y-%m-%d %H:%M:%S')+"'"+"}" 
@@ -240,7 +142,6 @@ class Time():
         return Time(new_timestamp) 
  
     def __sub__(self,other):
-        print( self, other )
         if isinstance(other, Time):
             timediff = self.__timestamp - other.__timestamp
             return timediff
@@ -249,22 +150,28 @@ class Time():
         elif isinstance(other, int):
             return Time(self.__timestamp - other) 
         else:
-           raise TypeError("Time isinstance can only sub Time|int|float isinstance") 
+           raise TypeError("Time isinstance can only sub Time|int|float isinstance.") 
 
-'''
-util time static method class
-'''
-def get_month_firstday_Time(t):
-    this_month_firstday = dt.datetime(t.year,t.month, 1)
-    return Time(this_month_firstday.strftime('%Y-%m-%d %H:%M:%S'))
+    def __getitem__(self, key):
+        if key=='timestamp':
+            return self.__timestamp
+        elif key == 'datetime':
+            return self.fmt('%Y-%m-%d %H:%M:%S')
+        else:
+            return None
 
-'''
-util time static method class
-'''
-def get_month_lastday_Time(t):
-    this_month_lastday = calendar.monthrange(t.year, t.month)[1]
-    return Time( dt.datetime(t.year, t.month, this_month_lastday).strftime('%Y-%m-%d %H:%M:%S') )
-
+    def __setitem__(self, key, value):
+        if key=='timestamp':
+            self.__timestamp = value
+        elif key == 'datetime':
+            fmt = get_strdate_format(args[0])
+            if fmt is not None:
+                timeArray = time.strptime( args[0], fmt)
+                self.__timestamp = time.mktime( timeArray)
+            else:
+                raise TypeError("Time format is not ok!") 
+        else:
+            raise ValueError('Only datetime or timestamp can be accepted!')
 
 
 '''
@@ -337,85 +244,3 @@ class Timeseries():
     @property
     def length(self):
         return self.__length
-    
-
-if __name__=='__main__':
-    #t1 = Time(30000)
-    #t2 = Time(1000)
-    #t979 = Time(1)
-    #t989 = Time(0)
-    #t999 = Time(-1)
-
-    #t3 = Time('2022-01-05 12:12:12.1')
-    #t909 = Time('2022-01-05 12:12:12.000001')
-    #t4 = Time('2022.01.05 12:12:12.000001')
-    #t5 = Time('2022/01/05 12:12:12.000001')
-    #t6 = Time('20220105 12:12:12.000001')
-
-    #t99 = Time('2022')
-    #t99 = Time('202201')
-    #t7  = Time('20220105')
-    #t8  = Time('20220105 12')
-    #t9  = Time('20220105 12:12')
-    #t10 = Time('20220105 12:12:13')
-
-    #t22 = Time('2022')
-    #t23 = Time('2022-01')
-    #t11 = Time('2022-01-05')
-    #t12 = Time('2022-01-05 12')
-    #t13 = Time('2022-01-05 12:12')
-    #t14 = Time('2022-01-05 12:12:13')
-
-    #t25 = Time('2022')
-    #t26 = Time('2022.01')
-    #t15 = Time('2022.01.05')
-    #t16 = Time('2022.01.05 12')
-    #t17 = Time('2022.01.05 12:12')
-    #t17 = Time('2022.01.05 12:12:13')
-    #print( 't17 time format %Y-%m-%d %H:%M:%S ', t17.fmt( '%Y-%m-%d %H:%M:%S' ))
-
-    print( ' t18 is created ! ')
-    t18 = Time()
-    print( ' t18 init end ')
-
-    print( ' the lastday  begin ')
-    print( 't18 the lastday of 2022.01.12 is : ', get_month_lastday_Time(t18).fmt('%Y-%m-%d %H:%M:%S') )
-    print( 'the lastday end')
-
-    print( 'the first day begin')
-    print( 't18 the first day of 2022.01.12 is :', get_month_firstday_Time(t18).fmt('%Y-%m-%d %H:%M:%S') )
-    print( 'the first day end')
-
-    #print( t1 )
-    #print( t2 )
-    #print( t1 - t2 )
-    #print( t1.timestamp )
-    #print( t2.timestamp )
-    #print( t1 + 100 )
-    #print( t1 + 20000 )
-
-    #print( 'day is :', t1.day)
-    #print( 'month is :', t1.month)
-    #print( 'year is :', t1.year)
-    #print( 'week is :', t1.week)
-
-    ts1 = Timeseries()
-    ts2 = Timeseries('20210101')
-    ts3 = Timeseries('20210131')
-    ts4 = Timeseries('20200901')
-    ts5 = Timeseries('20200430')
-    ts6 = Timeseries('20200228')
-    ts7 = Timeseries('20200228', 10)
-    ts8 = Timeseries('20200228', 10, 60)
-
-    print( 'ts1:', ts1.fmt('%Y-%m-%d') )
-    print( 'ts2:', ts2.fmt('%Y-%m-%d') )
-    print( 'ts3:', ts3.fmt('%Y-%m-%d') )
-    print( 'ts4:', ts4.fmt('%Y-%m-%d') )
-    print( 'ts5:', ts5.fmt('%Y-%m-%d') )
-    print( 'ts6:', ts6.fmt('%Y-%m-%d') )
-    print( 'ts7:', ts7 )
-    print( 'ts7:', ts7.fmt('%Y-%m-%d') )
-    print( 'ts8:', ts8.fmt('%Y-%m-%d %H:%M:%S'))
-
-    #print( ts )

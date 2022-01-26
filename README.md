@@ -22,85 +22,66 @@ This package is very easy to use:
 
 You can input data parameter with float timestamp or string datetime format to init the Time class instance.
 
-from zdb import Time, Timeseries
+from richdb import Time,Timeseries,rich
 
+rich() #generate some magic numbers may make you rich, why not have a try!!!!!!!!! 
+
+#init the class Time with timestamp
+#用时间戳初始化这个时间Time类
 t1 = Time(30000)
-
 t2 = Time(1000)
-
 t979 = Time(1)
-
 t989 = Time(0)
-
 t999 = Time(-1)
 
+#init the class Time with some special strformat
+#用常见的几种日期格式初始化Time这个类。
 t3 = Time('2022-01-05 12:12:12.1')
-
 t909 = Time('2022-01-05 12:12:12.000001')
-
 t4 = Time('2022.01.05 12:12:12.000001')
-
 t5 = Time('2022/01/05 12:12:12.000001')
-
 t6 = Time('20220105 12:12:12.000001')
 
 t99 = Time('2022')
-
 t99 = Time('202201')
-
 t7  = Time('20220105')
-
 t8  = Time('20220105 12')
-
 t9  = Time('20220105 12:12')
-
 t10 = Time('20220105 12:12:13')
 
 t22 = Time('2022')
-
 t23 = Time('2022-01')
-
 t11 = Time('2022-01-05')
-
 t12 = Time('2022-01-05 12')
-
 t13 = Time('2022-01-05 12:12')
-
 t14 = Time('2022-01-05 12:12:13')
 
 t25 = Time('2022')
-
 t26 = Time('2022.01')
-
 t15 = Time('2022.01.05')
-
 t16 = Time('2022.01.05 12')
-
 t17 = Time('2022.01.05 12:12')
-
 t17 = Time('2022.01.05 12:12:13')
 
+#you can get all kinds of the datetime format with the function fmt.
 print( 't17 time format %Y-%m-%d %H:%M:%S ', t17.fmt( '%Y-%m-%d %H:%M:%S' ))
 
-
+#you can do Time plus and minus ,the return is float second diff.
 print( t1 )
 print( t2 )
 print( t1 - t2 )
 
 print( t1.timestamp )
-
 print( t2.timestamp )
 
 print( t1 + 100 )
-
 print( t1 + 20000 )
 
+#you also can get month diff years diff and day diff with the special diff function.
+
 print( 'day is :', t1.day)
-
 print( 'month is :', t1.month)
-
 print( 'year is :', t1.year)
-
 print( 'week is :', t1.week)
 
 获取截止当前时间所在月的全部日期：
