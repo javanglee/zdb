@@ -1,6 +1,5 @@
 # -*- coding=utf-8 -*-
 import os
-import yaml
 import logging
 import re
 import copy
@@ -10,7 +9,6 @@ from rich.console import Console
 from rich.table import Table
 
 from datetime import datetime
-from common import common as c 
 from functools import wraps
 from runlog import log
 from pathlib import Path
@@ -27,9 +25,7 @@ class vdict:
     def __init__(self, *args, **kwargs):
         name = kwargs['name'] if 'name' in kwargs else ''
         _list = kwargs['_list'] if '_list' in kwargs else [] 
-        print('id is :', str(id(self)) )
         self.__name = str(id(self)) if name=='' else name
-        print('__name is :', self.__name)
         self.__list = _list
         if self.__name in v_columns_names:
             for i in range( len( v_columns_names[self.__name])):
@@ -41,7 +37,6 @@ class vdict:
             v_columns_names[self.__name] =[]
             for i in range( len(_list)):
                 v_columns_names[self.__name].insert(i, None) 
-        print( v_columns_names )
 
         self.__len = len(v_columns_names[self.__name])
         columns = v_columns_names[self.__name]
@@ -82,7 +77,7 @@ class vdict:
         if self.__iter >=self.__len:
             raise StopIteration
         iteritem = self.__list[self.__iter]
-        self.__iter += 1
+        self.__iter +=  1
         return iteritem
 
     def __iter__(self):

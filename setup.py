@@ -5,14 +5,15 @@ with open("README.md", "r", encoding='utf8') as fh:
 
 setup(
     name="richdb",
-    version="0.0.1",
+    version="0.0.2",
     author="javang.lee",
     author_email="walkbob@sina.com",
-    description="Timeseries for data show",
+    description="Time,Timeseries,vdict(combine the benefits of list and dict) is designed for Timeseries problem analysis",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    url="https://github.com/javanglee/zdb.git", 
+    install_requires = ["os", "sys", "logging", "re", "copy", "time", "datetime", "calendar", "rich", "pathlib", "threading", "functools", "random"],
+    url="https://github.com/javanglee/zdb.git",
     include_package_data = True,
     packages_data={
         'data_pkg':['data/default/']
@@ -20,7 +21,7 @@ setup(
 
     packages=find_packages(),
 
-    py_modules=['richdb','vdict','runlog', 'common/common'],
+    py_modules=['richdb','vdict','runlog','ztime','version'],
 
     classifiers=[
         "Programming Language :: Python :: 3",
