@@ -49,12 +49,11 @@ these numbers may make you rich:
 
 当你使用python官方标准时间库时，可能会经常绕晕自己。datetime,calendar,time这些包能很好帮助我们处理时间的问题，但是缺少一点便捷。pathlib的出现给了我们一些启发，时间处理是否可以像pathlib一样方便。此类设计可能会带来性能的影响，但是又不一定，因为好的设计往往带来不只是局部性能的提升而是全局性能的提升，这在DirectX的C#项目与C++项目中得到了印证。
 
-When we use the official standard time package, it always make us confused.datetime,calendar,time these packages can help us to solve the timeseries problem,but it is not so convenient.The pathlib enlightened us , can we make the time package to be like the pathlib.These kind of design may bring some performance problem,or may not.Good design always bring the whole system's better performance rather local optimization.DirectX c# projects are always playing better than the C++.
+When we use the official standard time package, it always make us confused.datetime,calendar,time these packages can help us to solve the timeseries problem,but it is not so convenient.The pathlib enlightened us , can we make the time package to be like the pathlib.These kind of design may bring some performance problem,or may not.Good design always bring the whole system's better performance rather than local optimization.DirectX c# projects are always playing better than the C++.
 
 软件工程时常要平衡性能和代码可维护性的关系，这个平衡是一个优秀的架构师和程序员管理者的基本功。但是评价这个能力和基本功的量化指标是缺乏的，全世界的程序员们也只能凭主观感受来评价代码，这带来了巨大的管理麻烦，使得世界各地的IT项目良莠不齐，甲乙双方难以达成合适的协议，甲方不知道为哪类代码增加更多的经费（得加钱）。
 
- Software engineering always need to balance the performance and the maintainability.A good Software Architect can make this balance awesome.But we lack the index or kpi like to estimate  the design work. All of this is based on subjective evaluation on appearance of the code.This make the IT project The corps and the weeds mix together.Party A and Party B can't reach a reasonable agreement.The Party A doesn't know how to make supplementary budget for expenditures for better codes.
-
+ Software engineering always need to balance the performance and the maintainability.A good Software Architect can make this balance awesome.But we lack the index or kpi like to estimate  the design work. All of these is based on subjective evaluation on appearance of the code.This make the IT project The corps and the weeds mix together.Party A and Party B can't reach a reasonable agreement.The Party A doesn't know how to make supplementary budget for expenditures for better codes.
 
 
 在研究pathlib的特征时，我们发现，pathlib的设计理念很类似数学群论。它首先定义了一个文件路径的集合A和字符串的集合B，然后定义了文件路径集合的加法运算/，A中的元素与B中的元素通过运算符/以及其他运算符，在A B两个集合形成了一个很好的闭合。
