@@ -112,14 +112,15 @@ Timeseries is very important part of the Data Manage Engineering(this area is so
 **一手数据源原则**，避免计算列，所有的日期都是由时间戳获得，这是数据处理中最重要的原则之一。
 
 
-First Hand Data Principle ：Avoid computing the field from other fields.In Time class instance only store the timestamp.
+First Hand Data Principle ：Avoid computing the field base on the computed fields.
+In Time class instance only store the timestamp.
 
 一手数据源原则，就是B数据集由A数据集计算得来，但是为了避免A数据集计算错误和时间差造成的不一致，通常C计算集都是由A计算得来。
 这有个概率公式A->B->C  A->B出错的概率为a，B->C出错的概率为b, 
 C数据集会因为数据错误的概率会因为传递而导致增加$( sum(A)*a*(1-b) + sum(B)*b*(1-a))/sum(B)$。相比于直接通过A计算出C，A->C 发生数据错误的概率更低。 
 
 
-A is computed from B. C can be computed from A and also can be computed from B.
+B is computed from A. C can be computed from A and also can be computed from B.
 
 If you follow the First Hand Data Principle ,you should compute C directly from A rather than compute C from B. 
 
@@ -129,7 +130,7 @@ C error probability is :$( sum(A)*a*(1-b) + sum(B)*b*(1-a))/sum(B)$
 
 当我们选择接口或者数据嵌套时，就需要深度评估，尤其加强测试，对于有嵌套行为的接口测试的工作量通常要远多于没有数据嵌套的。
 
-So when we choose api ,we'd better not nest api for data transformation. If you have to do this, you must add more test than before.
+So when we choose api ,we'd better not nest api for data transformation. If you have to do this, you must add more test than before and add more maintenance cost.
 
 ```
 >>> a=[1,2,3]
@@ -142,7 +143,7 @@ IndexError: list assignment index out of range
 
 python原有的list不是很方便，因为经常会因为越界而爆出异常，另外dict类型往往消耗内存较多。所以在这个包中混合了vector list和dict的特点，做了一个vdict类，用起来很方便。
 
-Standard lib list is not enough for some circumstance. And dict type data wastes more memory. So this vdict combines the benefits of  vector and list.
+Standard lib list is not enough for some circumstance. And dict type data waste more memory. So this vdict combines the benefits of  vector and list.
 
 ```
 >>> from richdb import vdict
