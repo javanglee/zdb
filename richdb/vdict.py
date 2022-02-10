@@ -23,25 +23,34 @@ class LineException(Exception):
 
 class vdict:
     def __init__(self, *args, **kwargs):
+        self.__list=[]
+        self.__iter = 0
+        self.__len = 0
         name = kwargs['name'] if 'name' in kwargs else ''
         _list = kwargs['_list'] if '_list' in kwargs else [] 
-        self.__name = str(id(self)) if name=='' else name
-        self.__list = _list
+        self.__name = str(id(self)) if name=='' or name is None else name
+        llen = len( _list )
+
+        #init the vdict with the exists v_columns
         if self.__name in v_columns_names:
             for i in range( len( v_columns_names[self.__name])):
-                self.__list.append(None)
-
-        self.__iter = 0
+                if i<llen:
+                    self.__list.insert(i,_list[i])
+                else:
+                    self.__list.insert(i, None)
 
         if self.__name not in v_columns_names:
             v_columns_names[self.__name] =[]
-            for i in range( len(_list)):
-                v_columns_names[self.__name].insert(i, None) 
+            for i in range( len(_list) ):
+                v_columns_names[self.__name].insert(i, str(i)) 
+                if i <llen:
+                    self.__list.insert(i, _list[i])
+                else:
+                    self.__list.insert(i, None)
 
         self.__len = len(v_columns_names[self.__name])
         columns = v_columns_names[self.__name]
         self.__columns = columns
-
 
     @property
     def columns(self):
@@ -85,7 +94,8 @@ class vdict:
         return self
 
     def __len__(self):
-        return self.__len
+        print( self.__list)
+        return max( len(self.__list), len(v_columns_names[self.__name]) )
 
     def __getattr__(self, name):
         pass
@@ -97,9 +107,17 @@ class vdict:
         if isinstance(key, str):
             for i in range(len(v_columns_names[self.__name])):
                 if v_columns_names[self.__name][i] == key:
-                    return self.__list[i]
-        return self.__list[key]
-        
+                    if i<len(self.__list) and i>= 0:
+                        return self.__list[i]
+
+        if isinstance(key, int): 
+            if key<len(self.__list) and key >=0:
+                return self.__list[key]
+            elif key <0:
+                return self.__list[ len(self.__list)+key-1 ]
+
+        return None
+         
     def __setitem__(self, key, value):
         vlen = len(v_columns_names[self.__name])
         inflag = False
@@ -112,12 +130,12 @@ class vdict:
                 v_columns_names[self.__name].insert(vlen, key)
                 self.__list.insert(vlen,value)
                 inflag = True
-        elif isinstance(key, int):            
+        elif isinstance(key, int):
             if key >= vlen:
                 for i in range(key-vlen+1):
                     self.__list.insert(vlen+i, None)
                     v_columns_names[self.__name].insert(vlen+i, str(vlen+i))
-                self.__list[key] = value
+                self.__list[key]=value
             else:
                 self.__list[key] = value
 
@@ -132,8 +150,9 @@ class vdict:
 
     def to_dict(self):
         d = {}
+        print( v_columns_names )
         for i in v_columns_names[self.__name]:
-            d[i] = self[i]       
+            d[i] = self.__getitem__(i)      
         return d
 
     def to_list(self):

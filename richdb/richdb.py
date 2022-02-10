@@ -6,28 +6,6 @@ from .vdict import vdict
 from .ztime import Time, Timeseries 
 
 '''
-我们的口号是：为发财而生
-'''
-
-'''
-这个包的设计是模仿pathlib的，我们管这种设计方式叫基于群论的软件工程设计方法。
-this package is designed follow the pathlib's design method
-we call this kind design method : software design base on group theory
-
-群的性质越完备越好，则类的设计越好。
-将群论引入软件工程有助于量化评估代码质量，我们经常无法解决的问题是什么代码算好的问题，缺乏一个量化的指标。
-这是python和C++语言的魅力，未来语言应该怎样设计呢？
-
-时间序列是数据处理中非常重要的领域，数据管理工程中很重要的原则就是一手数据源原则。
-this package contains another design method. 
-一手数据源原则，避免计算列，所有的日期都是由时间戳获得，这是数据处理中最重要的原则之一。
-一手数据源原则，就是A数据集由B数据集计算得来，但是为了避免A数据集计算错误和时间差造成的不一致，通常C计算集都是由A计算得来。
-这有个概率公式A->B->C A->B出错的概率为a B->C出错的概率为b, 
-C数据集会因为数据错误的概率会因为传递而导致增加( sum(A)*a*(1-b) + sum(B)*b ) /sum(B)。
-当我们选择接口或者数据嵌套时，就需要深度评估，尤其加强测试。
-'''
-
-'''
 argument support 
 Time(float|date) =
 timestamp:
@@ -70,6 +48,29 @@ def rich():
     reds_you_get=reds[0:6]
     blue = random.choice(blues)
     blue = "['" +str(blue) +"']"
+    text='''
+我们的口号是：为发财而生
+Our Slogan: BORN FOR RICH
+
+      [   ]
+(@)==[_____]==(@)
+      |* *|
+      (_-_)
+     /     \\
+    /    / 恭 /
+__@__   / 喜 /
+\\___/  / 发 / \\
+  \\   / 财 /  /
+   |_________|
+
+   "MONEY GOD"
+   Buddha Ruly, Camel God, Jesus God, ... and so on.
+   There are seven Gods in this world.
+   One God rule them all.
+   Knee before the Money God and pray.
+   And then you will be rich.
+'''
+    print( text )
     print("these numbers may make you rich:")
     print( sorted(reds_you_get), blue )
 
@@ -156,3 +157,4 @@ if __name__=='__main__':
     print( 'ts8:', ts8.fmt('%Y-%m-%d %H:%M:%S'))
 
     #print( ts )
+    rich()
