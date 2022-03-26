@@ -5,6 +5,7 @@ import re
 import calendar
 
 from .util import get_strdate_format
+from .null import null
 
 '''
 util time static method class
@@ -19,25 +20,6 @@ util time static method class
 def get_month_lastday_Time(t):
     this_month_lastday = calendar.monthrange(t.year, t.month)[1]
     return Time( dt.datetime(t.year, t.month, this_month_lastday).strftime('%Y-%m-%d %H:%M:%S') )
-
-'''
-设计的核心理念：为发财而生(born for rich)
-这个包的设计是模仿pathlib的，我们管这种设计方式叫基于群论的软件工程设计方法。
-this package is designed follow the pathlib's design method
-we call this kind design method : software design base on group theory
-
-群的性质越完备越好，则类的设计越好。
-将群论引入软件工程有助于量化评估代码质量，我们经常无法解决的问题是什么代码算好的问题，缺乏一个量化的指标。
-这是python和C++语言的魅力，未来语言应该怎样设计呢？
-
-时间序列是数据处理中非常重要的领域，数据管理工程中很重要的原则就是一手数据源原则。
-this package contains another design method. 
-一手数据源原则，避免计算列，所有的日期都是由时间戳获得，这是数据处理中最重要的原则之一。
-一手数据源原则，就是A数据集由B数据集计算得来，但是为了避免A数据集计算错误和时间差造成的不一致，通常C计算集都是由A计算得来。
-这有个概率公式A->B->C A->B出错的概率为a B->C出错的概率为b, 
-C数据集会因为数据错误的概率会因为传递而导致增加( sum(A)*a*(1-b) + sum(B)*b ) /sum(B)。
-当我们选择接口或者数据嵌套时，就需要深度评估，尤其加强测试。
-'''
 
 '''
 argument support 
@@ -73,29 +55,29 @@ class Time():
         fmt = ""
         if len(args)>1 :
             raise ValueError('Only one or zero argument is needed!')
-
         elif len(args) == 0:
             self.__timestamp = time.time()
             return
-
         elif isinstance( args[0] , float):
             self.__timestamp = args[0]
-            print( args[0] )
             return 
-
         elif isinstance( args[0], str):
             fmt = get_strdate_format(args[0])
             if fmt is not None:
                 timeArray = time.strptime( args[0], fmt)
                 self.__timestamp = time.mktime( timeArray)
-        else:
+        elif args is None:
             self.__timestamp = time.time()
-
+        else:
+            raise ValueError("Time(args)'s args can only be float timestamp or str format")
 
     @property
     def timestamp(self):
         return self.__timestamp
-
+    @property
+    def datetime(self):
+        return self.fmt('%Y-%m-%d %H:%M:%S')
+    
     @property
     def year(self):
         return dt.datetime.fromtimestamp(self.__timestamp).year
@@ -128,6 +110,9 @@ class Time():
         return (self-orther)/60.0/60.0/24.0
 
     def __repr__(self):
+        return self.fmt('%Y-%m-%d %H:%M:%S')
+
+    def __str__(self):
         return "{'timestamp':"+str(self.__timestamp) +","+"'datetime':"+"'"+self.fmt('%Y-%m-%d %H:%M:%S')+"'"+"}" 
 
     def __add__(self,other):
@@ -164,9 +149,9 @@ class Time():
         if key=='timestamp':
             self.__timestamp = value
         elif key == 'datetime':
-            fmt = get_strdate_format(args[0])
+            fmt = get_strdate_format(value)
             if fmt is not None:
-                timeArray = time.strptime( args[0], fmt)
+                timeArray = time.strptime( value, fmt)
                 self.__timestamp = time.mktime( timeArray)
             else:
                 raise TypeError("Time format is not ok!") 

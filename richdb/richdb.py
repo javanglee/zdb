@@ -2,9 +2,9 @@
 
 
 import random
+from .ztime import Time, Timeseries
+from .mdict import mdict
 from .vdict import vdict 
-from .ztime import Time, Timeseries 
-
 '''
 argument support 
 Time(float|date) =
