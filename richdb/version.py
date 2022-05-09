@@ -1,1 +1,2 @@
-__version__ = '0.0.5'
+#-*- encoding=utf8 -*-
+__version__ = '0.0.6'

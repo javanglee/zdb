@@ -1,13 +1,7 @@
-# uncompyle6 version 3.8.0
-# Python bytecode 3.6 (3379)
-# Decompiled from: Python 3.6.8 (tags/v3.6.8:3c6b436a57, Dec 24 2018, 00:16:47) [MSC v.1916 64 bit (AMD64)]
-# Embedded file name: C:\Users\scienco\Desktop\paper\zdb\richdb\ztime.py
-# Compiled at: 2022-05-05 05:50:29
-# Size of source mod 2**32: 8709 bytes
+# -*- encoding=utf8 -*-
 import datetime as dt, time, re, calendar, sys
-sys.path.append('.')
-from util import get_strdate_format
-from wull import wull
+from .utils import get_strdate_format
+from .wull import wull
 
 def get_month_firstday_Time(t):
     this_month_firstday = dt.datetime(t.year, t.month, 1)
