@@ -1,32 +1,45 @@
 # -*- encoding=utf8 -*-
+import sys
+sys.path.append('.')
+
 import datetime as dt, time, re, calendar, sys
-from .utils import get_strdate_format
-from .wull import wull
+from utils import get_strdate_format
+from wull import wull, iswull, WULL
+from datetime import datetime
+
+if sys.version_info.major >=3 and sys.version_info.minor>=8:
+    clocktime = time.perf_counter
+    process_time = time.process_time
+    process_time_ns = time.process_time_ns
+else:
+    clocktime = time.clock
+    process_time = time.clock
+    process_time_ns = time.clock
 
 def get_month_firstday_Time(t):
     this_month_firstday = dt.datetime(t.year, t.month, 1)
     return Time(this_month_firstday.strftime('%Y-%m-%d %H:%M:%S'))
 
-
 def get_month_lastday_Time(t):
     this_month_lastday = calendar.monthrange(t.year, t.month)[1]
     return Time(dt.datetime(t.year, t.month, this_month_lastday).strftime('%Y-%m-%d %H:%M:%S'))
 
-
 class Time:
-
     def __init__(self, *args):
-        fmt = ''
-        if len(args) > 1:
-            raise ValueError('Only one or zero argument is needed!')
-        else:
-            if len(args) == 0:
-                self._Time__timestamp = time.time()
-                return
-            if isinstance(args[0], float):
-                self._Time__timestamp = args[0]
-                return
-            if isinstance(args[0], str):
+        self._Time__timestamp = time.time()
+        self.__epoch =0.0
+        if len(args) == 0 or args[0]=='':
+            return
+        if isinstance(args[0], float):
+            self._Time__timestamp = args[0]
+            return
+        if isinstance(args[0], datetime):
+            self._Time__timestamp = args[0].timestamp()
+            return
+        if isinstance(args[0], str):
+            if args[0][0] == '@':
+                self.__epoch=WULL
+            else:
                 fmt = get_strdate_format(args[0])
                 if '.' in args[0]:
                     gsecond = args[0].split('.')[0]
@@ -46,12 +59,12 @@ class Time:
                 epoch = dt.datetime(1970, 1, 1)
                 stamp_seconds = (dtime - epoch).total_seconds()
                 self._Time__timestamp = stamp_seconds + fsecond
-            else:
-                if args is None:
-                    self._Time__timestamp = time.time()
-                else:
-                    raise ValueError("Time(args)'s args can only be float timestamp or str format")
-
+        else:
+            raise ValueError("Time(args)'s args can only be float timestamp or str format or datetime.datetime")
+    @property
+    def epoch(self):
+        return self._epoch
+    
     @property
     def timestamp(self):
         return self._Time__timestamp
@@ -75,6 +88,18 @@ class Time:
     @property
     def week(self):
         return dt.datetime.fromtimestamp(self._Time__timestamp).week
+
+    @classmethod
+    def clock(cls):
+        return clocktime()
+
+    @classmethod
+    def process_time(cls):
+        return process_time()
+
+    @classmethod
+    def process_time_ns(cls):
+        return process_time_ns()
 
     def timezone(self, utc):
         hours = int(utc.replace('UTC', ''))

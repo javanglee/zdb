@@ -191,6 +191,11 @@ class wull:
     def __del__(self):
         pass
 
+def iswull(element):
+    if isinstance(element, wull):
+        return True
+    return False
+WULL = wull()
 
 if __name__ == '__main__':
 
@@ -219,3 +224,7 @@ if __name__ == '__main__':
     print(a == 3)
     print(a == a)
     print(3 == a)
+
+    a = wull()
+    print( iswull(a) )
+    print( iswull(1) )
