@@ -3,6 +3,30 @@
 import threading, time
 
 class wull:
+    '''
+    a + @ = a
+    @ + a = a
+    @ - a =-a
+    a - @ = a
+    -@    = @
+
+    a * @ = @
+    @ * a = @
+    a / @ = @
+    @ / a = @
+
+    a ^ @ = @
+    @ ^ a = @
+
+    ln(@) = @ #not easy to realize with python so you can import ln from richdb
+    |@|   = @ 
+    -1 > @
+    0  > @
+    1  > @
+
+    空元的乘除法不变性
+
+    '''
     _wull__instance = None
     _wull__lock = threading.Lock()
 
@@ -22,7 +46,6 @@ class wull:
     def __new__(cls, *args, **kwargs):
         with cls._wull__lock:
             if wull._wull__instance is None:
-                time.sleep(1)
                 wull._wull__instance = (object.__new__)(cls, *args, **kwargs)
         return wull._wull__instance
 
@@ -36,10 +59,10 @@ class wull:
         return '@'
 
     def __add__(self, other):
-        return self
+        return other 
 
     def __radd__(self, other):
-        return self
+        return other
 
     def __mul__(self, other):
         return self
@@ -48,10 +71,10 @@ class wull:
         return self
 
     def __sub__(self, other):
-        return self
+        return -other 
 
     def __rsub__(self, other):
-        return self
+        return other 
 
     def __truediv__(self, other):
         return self

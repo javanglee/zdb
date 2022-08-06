@@ -1,10 +1,43 @@
 # -*- encoding=utf8 -*-
 import sys
-sys.path.append('.')
+from os.path import dirname, abspath
+sys.path.append( dirname( abspath( __file__ ) ) )
+
 from mdict import mdict
+from wull import wull, iswull, WULL
 import pytest
 from ztime import Time
 import time
+
+def test_wull():
+    a = WULL
+    assert iswull(a) == True
+    assert not iswull(a) == False
+
+    assert a+1   == 1
+    assert a-1   == -1
+    assert 1-a   == 1
+    assert -1-a  == -1
+    assert 1 + a == 1
+    assert 1-a   == 1
+
+    assert a*2 == a
+    assert a/2 == a
+    assert 2/a == a
+    assert 2*a == a
+
+    assert 2+a+3-a+4==9
+    assert 2-a-4 == -2
+
+    assert abs(a) == a
+    assert (1>a) == True
+    assert (0>a) == True
+    assert (-1>a) == True
+    
+    assert (a>-1) ==  False
+    assert (a>1) ==  False
+    assert (a>0) ==  False
+
 
 def test_mdict():
     #block 1 key in main dict and value in mirror dict and dict[key] == value
@@ -72,6 +105,12 @@ def test_Time():
     t1=Time('1970-01-01 00:00:00')
     assert t1.timestamp == 0.0
 
+    t1 = Time('@-1')
+    assert t1=='-0@23:59:59.0000000'
+
+    t1 = Time('@-1')
+    assert t1=='0@00:00:00.0000000'
+    
     t1=Time('1970-1-1 0:0:0')
     assert t1.timestamp == 0.0
 
@@ -83,3 +122,4 @@ def test_Time():
 
     t1 = Time('1970')
     assert t1.timestamp == 0.0
+
