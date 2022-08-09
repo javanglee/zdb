@@ -29,32 +29,101 @@ class Time
 Get current time:
 t1 = Time()
 t1.fmt('%Y-%m-%d %H:%M:%S') #2022-08-04 10:46:30
+t1.fmt('%Y-%m-%d %H:%M:%S.%f') #2022-08-04 10:46:30.100002
 
-Make str to Time(Micro AI aided programming):
+Make str to Time(Weak AI Aided Programming WAIAP):
+
 t1 = Time('2022')
 t1 = Time('2022-01-02 10:49:22.121233')
 t1 = Time('2022-01-01')
 
+#t1 = Time('March 2 1996')
+#t1 = Time('March,2,1996')
+#t1 = Time('March 2,1996')
+
+#t1 = Time('2 March,1996')
+#t1 = Time('2,March,1996')
+#t1 = Time('2 March 1996')
+
+#t1 = Time('Mar. 2,1996')
+#t1 = Time('Mar 2 1996')
+#t1 = Time('Mar. 2 1996')
+#t1 = Time('Mar.,2 1996')
+#t1 = Time('Mar.,2,1996')
+
+#t1 = Time('Mar2 1996')
+#t1 = Time('Mar.2 1996')
+#t1 = Time('2Mar. 1996')
+
+#t1 = Time('1989/01/02 12:01:00.10002')
+#t1 = Time('1989.01.02 12:01:00.10002')
+#t1 = Time('1989 01 02 12:01:00.10002')
+
+Because the USA and England's time different,we have to use US/us or EN/en prefix to help the class.
+Maybe all of you think this is not difficult.
+But when you design it in the dark road, it is so hard and full of pain.
+
+It is very hard to choose from NLP or RegEx.
+
+#t1 = Time('us01 02 1980 12:00:00.10002')
+#t1 = Time('en01 02 1980 12:00:00.10002')
+
+#t1 = Time('en01/02/1980 12:00:00.10002')
+#t1 = Time('us01/02/1980 12:00:00.10002')
+
 Get current watch time(Tt is the time from your watch) :
 t2 = Time('@') # 19208@02:48:21.6316211
+t3 = Time('@-1')# -0@23:59:59.0000000
+
 default 19208 represent the days from utc 1970-01-01 00:00:00.0 to present.
 
-t2 = Time()
-t1 = Time()
+Here is the formula:
+Time('@imestamp') = 'D@H:M:S'
+H:M:S show the time from pointer of the watch.
+Change watch time to seconds.
 
-t2-t1 return a watch time Time('@'),it is equivalent to timedelta.
+timestamp = D*86400+(H*60*60+M*60+S)
+
+Time('@-timestamp') = '-D@H:M:S'
+timestamp = -D*86400-86400+(H*60*60+M*60+S)
+
+if you use it like this , it is more clear.
+Time('@12:23:24.23232')
+Time('@-12:23:24.23232')
+
+#Time('-1@12:23:24.23232')
+#Time('2@12:23:24.23232')
+
+
+t1 = Time()
+t2 = Time()
+
+Can't make t1+t2, it will raise Exception.
+
+
+t2-t1 return a watch time Time('@'),Sometimes it is equivalent to timedelta.
+But it means the Timer on your Pocket Watch. 
+It shows the pointer of the Pocket Watch when press at t1 ,and stop at t2.
+It is not very hard to make the logic clear.
+Maybe this is ugly, but I can't find a better way.
+
 (t2-t1).timestamp is float
 (t2-t1).epoch is wull, if you print it you will see @ in cmd.
 
 but t2.epoch is 1970-01-01 00:00:00.0
 
-wull is an special class , you can read doc about it.
+Wull is an special class, it is different from None.
 
-
-
-
+t1 = Time()
+t2 = Time('@1000')
+t1 + t2 == t1 + 1000
+t1 + '3D' #add three days to t1
+t1 + '3H' #add three hours to t1
+t1 + '3min' #add three minutes to t1
+t1 + '3S' #add three seconds to t1
 
 '''
+
 class Time:
     '''
         Time init
@@ -64,24 +133,31 @@ class Time:
         self.__epoch =0.0
         if len(args) == 0 or args[0]=='':
             return
-        if isinstance(args[0], float):
-            self._Time__timestamp = args[0]
+        if isinstance(args[0], float) or isinstance(args[0],int):
+            self._Time__timestamp = float(args[0])
             return
         if isinstance(args[0], datetime):
             self._Time__timestamp = args[0].timestamp()
             return
         if isinstance(args[0], str):
-            if args[0][0] == '@':
+            if '@' in args[0]:
                 self.__epoch=WULL
-                clocktimestr = args[0].strip('@')
+                daystr = args[0].split('@')[0]
+                sign=1 
+                if '-' in daystr:
+                    sign = -1
+
+                days = abs(float(daystr)) if daystr != '' else 0.0
+
+                clocktimestr = args[0].split('@')[1]
                 timearr = clocktimestr.split(':')
                 tlen = len( timearr )
                 ttimestamp = 0.0
-                cflag = 1
+
 
                 if ':' in clocktimestr:
                     if clocktimestr[0] == '-':
-                        cflag = -1
+                        sign = -1
                     for i in range(tlen):
                         c = float(timearr[i])
 
@@ -97,12 +173,16 @@ class Time:
                             ttimestamp = ttimestamp + abs(c) * 60
                         if i == 2 :
                             ttimestamp = ttimestamp + abs(c)
-
-                    self._Time__timestamp = ttimestamp * cflag
+                    if sign == 1:
+                        self._Time__timestamp = ttimestamp * sign + float(days)*86400
+                    else:
+                        #timestamp = -D*86400-86400+(H*60*60+M*60+S)
+                        self._Time__timestamp = ttimestamp+float(days)*86400*sign-86400
 
                 elif tlen >= 1 and clocktimestr != '' :
-                    self._Time__timestamp = float(clocktimestr)
-
+                    if '-' in clocktimestr:
+                        sign = -1
+                    self._Time__timestamp = abs(float(clocktimestr))*sign+abs(float(days))*86400*sign
             else:
                 fmt = get_strdate_format(args[0])
                 if '.' in args[0]:
@@ -125,6 +205,7 @@ class Time:
                 self._Time__timestamp = stamp_seconds + fsecond
         else:
             raise ValueError("Time(args)'s args can only be float timestamp or str format or datetime.datetime")
+
     @property
     def epoch(self):
         return self.__epoch
@@ -166,7 +247,6 @@ class Time:
         return process_time_ns()
 
     def timezone(self, utc):
-        
         hours = int(utc.replace('UTC', ''))
         if not iswull(self.__epoch):
             return Time(self._Time__timestamp + hours * 60 * 60)
@@ -238,8 +318,8 @@ class Time:
         if isinstance(other, int):
             new_timestamp = self._Time__timestamp + float(other)
         else:
-            if isinstance(other, float):
-                new_timestamp = self._Time__timestamp + other
+            if isinstance(other, float) or isinstance(other, int):
+                new_timestamp = self._Time__timestamp + float(other)
             else:
                 if isinstance(other, str):
                     #to do D H M S 
@@ -269,7 +349,7 @@ class Time:
 
                 if isinstance(other, Time):
                     if not iswull(self.__epoch) and not iswull(other.epoch):
-                        new_timestamp = max(self._Time__timestamp, other.timestamp)
+                        raise ValueError('All of the two time epoch is wull')
 
                     elif iswull(self.__epoch) and not iswull(other.epoch): 
                         new_timestamp = self._Time__timestamp + other.timestamp
@@ -280,7 +360,6 @@ class Time:
                     elif iswull(self.__epoch) and iswull(other.epoch):
                         new_timestamp = self._Time__timestamp + other.timestamp
                         return Time('@'+str(new_timestamp))
-
                 else:
                     raise TypeError("Time isinstance can't plus the type which is not str or int or float")
 
