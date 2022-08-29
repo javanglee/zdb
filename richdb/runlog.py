@@ -1,9 +1,13 @@
 #-*- encoding=utf8 -*-
 import os, sys
+import sys
+from os.path import dirname, abspath
+sys.path.append( dirname( abspath( __file__ ) ) )
+
 import threading, time, logging
 from functools import wraps
 import traceback
-from .ztime import Time
+from ztime import Time
 log_begin_time = Time().fmt('_%Y_%m_%d_%H_%M_%S')
 logging.basicConfig(filename=f"log{log_begin_time}.txt", level=(logging.DEBUG), format='%(asctime)s-%(levelname)s-%(message)s')
 

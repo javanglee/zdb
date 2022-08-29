@@ -1,65 +1,65 @@
-# uncompyle6 version 3.8.0
-# Python bytecode 3.6 (3379)
-# Decompiled from: Python 3.6.8 (tags/v3.6.8:3c6b436a57, Dec 24 2018, 00:16:47) [MSC v.1916 64 bit (AMD64)]
-# Embedded file name: C:\Users\scienco\Desktop\paper\zdb\richdb\mdict.py
-# Compiled at: 2022-04-30 23:00:11
-# Size of source mod 2**32: 3100 bytes
+#-*- encoding=utf8 -*-
 import threading
 lock = threading.Lock()
-
-class mdict:
-
-    def __init__(self, *args, **kwargs):
-        self._mdict__dict = {}
-        self._mdict__mirror_dict = {}
-        if len(args) >= 0:
-            return
+ 
+class mdict():
+    def __init__(self):
+        self.__dict = {}
+        self.__mirror_dict = {}
 
     def __getitem__(self, key):
-        if key in self._mdict__dict:
-            return self._mdict__dict[key]
-        if key in self._mdict__mirror_dict:
-            return self._mdict__mirror_dict[key]
+        if key in self.__dict:
+            return self.__dict[key]
+        elif key in self.__mirror_dict:
+            return self.__mirror_dict[key]
+        return None
 
     def __setitem__(self, key, value):
-        with lock:
-            if key in self._mdict__dict:
-                if value in self._mdict__mirror_dict:
-                    if self._mdict__dict[key] == value:
-                        return
-                else:
-                    if key not in self._mdict__dict:
-                        if value not in self._mdict__mirror_dict:
-                            self._mdict__dict[key] = value
-                            self._mdict__mirror_dict[value] = key
-                            return
-                    if value in self._mdict__mirror_dict:
-                        if key not in self._mdict__dict:
-                            del self._mdict__dict[self._mdict__mirror_dict[value]]
-                            del self._mdict__mirror_dict[value]
-                            self._mdict__dict[key] = value
-                            self._mdict__mirror_dict[value] = key
-            else:
-                if value not in self._mdict__mirror_dict:
-                    if key in self._mdict__dict:
-                        del self._mdict__mirror_dict[self._mdict__dict[key]]
-                        del self._mdict__dict[key]
-                        self._mdict__dict[key] = value
-                        self._mdict__mirror_dict[value] = key
-                if key in self._mdict__dict and value in self._mdict__mirror_dict and self._mdict__dict[key] != value:
-                    raise ValueError(f"{key} is in main dict and {value} is in mirror dict but dict[{key}] != {value}")
+        #{1: 2, None: 1}{2: 1, 1: None} a[2]=None
 
-    def __contains__(self, value):
-        if value in self._mdict__dict or value in self._mdict__mirror_dict:
-            return True
-        else:
-            return False
+        with lock:
+            #block 1 key in main dict and value in mirror dict and dict[key] == value
+            if key in self.__dict and value in self.__mirror_dict and self.__dict[key] == value:
+                return
+
+            #block 2 key not in main dict and value not mirror dict 
+            if key not in self.__dict and value not in self.__mirror_dict:
+                self.__dict[key] = value
+                self.__mirror_dict[value] = key
+                return
+
+            #block 3 value in mirror dict and key not in main dict
+            if value in self.__mirror_dict and key not in self.__dict:
+                #_dict ={ self.__mirror_dict[value] : self.__dict[ self.__mirror_dict[value] ] } 注释辅助 数据结构 
+                #_mirror_dict = { value: self.__mirror_dict[value] }
+
+                del self.__dict[ self.__mirror_dict[value] ]
+                del self.__mirror_dict[value]
+                self.__dict[key] = value
+                self.__mirror_dict[value] = key
+
+            #block 4 key in main dict and value not in mirror dict
+            if value not in self.__mirror_dict and key in self.__dict:
+                #_dict ={ self.__mirror_dict[value] : self.__dict[ self.__mirror_dict[value] ] } 注释辅助 数据结构 
+                #_mirror_dict = { value: self.__mirror_dict[value] }
+
+                del self.__mirror_dict[ self.__dict[key] ]
+                del self.__dict[key]
+                self.__dict[key] = value
+                self.__mirror_dict[value] = key
+
+            #block 5 key in main dict and value not in mirror dict and dict[key] ！= value
+            #this feature will be add 
+            if key in self.__dict and value in self.__mirror_dict and self.__dict[key] != value:
+                raise ValueError('key is in main dict and value is in mirror dict but dict[key] != value')
+
+
 
     def __repr__(self):
-        return str(self._mdict__dict) + str(self._mdict__mirror_dict)
+        return str( self.__dict ) + str( self.__mirror_dict)
 
     def __str__(self):
-        return str(self._mdict__dict) + str(self._mdict__mirror_dict)
+        return str(self.__dict) + str( self.__mirror_dict )
 
     def __add__(self, other):
         pass
@@ -72,15 +72,3 @@ class mdict:
 
     def __rsub__(self, other):
         pass
-
-
-if __name__ == '__main__':
-    m = mdict()
-    m['1'] = 100
-    m['100'] = 2
-    m['110'] = 3
-    if 3 in m:
-        print('ok')
-    if '100' in m:
-        print('ok')
-    print(m)

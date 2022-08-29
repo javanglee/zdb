@@ -1,10 +1,14 @@
 #-*-encoding=utf8-*-
 import os, logging, re, copy, time
+import sys
+from os.path import dirname, abspath
+sys.path.append( dirname( abspath( __file__ ) ) )
+
 from rich.console import Console
 from rich.table import Table
 from datetime import datetime
 from functools import wraps
-from .runlog import log
+#from runlog import log
 from pathlib import Path
 from threading import Thread, Lock
 lock = Lock()

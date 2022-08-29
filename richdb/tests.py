@@ -37,6 +37,7 @@ def test_wull():
     assert (a>-1) ==  False
     assert (a>1) ==  False
     assert (a>0) ==  False
+    assert str(a) == '@'
 
 
 def test_mdict():
@@ -106,10 +107,10 @@ def test_Time():
     assert t1.timestamp == 0.0
 
     t1 = Time('@-1')
-    assert t1=='-0@23:59:59.0000000'
+    assert str(t1)=='-0@23:59:59.0000000'
 
-    t1 = Time('@-1')
-    assert t1=='0@00:00:00.0000000'
+    t1 = Time('@0')
+    assert str(t1)=='0@00:00:00.0000000'
     
     t1=Time('1970-1-1 0:0:0')
     assert t1.timestamp == 0.0
@@ -123,3 +124,19 @@ def test_Time():
     t1 = Time('1970')
     assert t1.timestamp == 0.0
 
+    t1= Time('12:12:12.1212 2021/01/01')
+    assert str(t1) == '2021-01-01 12:12:12.1212'
+
+    t1= Time('12:12:12 2021/01/01')
+    assert str(t1) == '2021-01-01 12:12:12.0'
+
+    t=Time('us01/12/2012')
+    t=Time('12/2012')
+    t=Time('12 2012')
+
+    t=Time('01 12 2012')
+    t=Time('01-12-2012')
+
+    t=Time('us01-12-2012')
+    t=Time('/2021/01/01/')
+    t=Time('2021/01/01')

@@ -1,8 +1,12 @@
 # -*- encoding=utf8 -*-
 import random
-from .ztime import Time, Timeseries
-from .mdict import mdict
-from .vdict import vdict
+import sys
+from os.path import dirname, abspath
+sys.path.append( dirname( abspath( __file__ ) ) )
+
+from ztime import Time
+from mdict import mdict
+from vdict import vdict
 
 def rich():
     reds = [
@@ -24,3 +28,7 @@ def rich():
     print(text)
     print('these numbers may make you rich:')
     print(sorted(reds_you_get), blue)
+
+
+def pray(*args, **kw):
+    print( args, kw)

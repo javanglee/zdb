@@ -4,7 +4,7 @@ from os.path import dirname, abspath
 sys.path.append( dirname( abspath( __file__ ) ) )
 
 import datetime as dt, time, re, calendar, sys
-from utils import get_strdate_format
+from utils import *
 from wull import wull, iswull, WULL
 from datetime import datetime
 
@@ -184,12 +184,13 @@ class Time:
                         sign = -1
                     self._Time__timestamp = abs(float(clocktimestr))*sign+abs(float(days))*86400*sign
             else:
-                fmt = get_strdate_format(args[0])
-                if '.' in args[0]:
-                    gsecond = args[0].split('.')[0]
-                    lsecond = args[0].split('.')[1]
+                fmt = '%Y-%m-%d %H:%M:%S.%f'
+                std_date_str = get_std_datestr(args[0])
+                if '.' in std_date_str:
+                    gsecond = std_date_str.split('.')[0]
+                    lsecond = std_date_str.split('.')[1]
                 else:
-                    gsecond = args[0]
+                    gsecond = std_date_str
                     lsecond = ''
                 if '.%f' in fmt:
                     gfmt = fmt.split('.')[0]
