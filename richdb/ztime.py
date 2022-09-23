@@ -1,11 +1,9 @@
 # -*- encoding=utf8 -*-
 import sys
-from os.path import dirname, abspath
-sys.path.append( dirname( abspath( __file__ ) ) )
 
 import datetime as dt, time, re, calendar, sys
-from utils import *
-from wull import wull, iswull, WULL
+from .utils import *
+from .wull import wull, iswull, WULL
 from datetime import datetime
 
 if sys.version_info.major >=3 and sys.version_info.minor>=8:
@@ -17,13 +15,6 @@ else:
     process_time = time.clock
     process_time_ns = time.clock
 
-def get_month_firstday_Time(t):
-    this_month_firstday = dt.datetime(t.year, t.month, 1)
-    return Time(this_month_firstday.strftime('%Y-%m-%d %H:%M:%S'))
-
-def get_month_lastday_Time(t):
-    this_month_lastday = calendar.monthrange(t.year, t.month)[1]
-    return Time(dt.datetime(t.year, t.month, this_month_lastday).strftime('%Y-%m-%d %H:%M:%S'))
 '''
 class Time
 Get current time:
@@ -32,32 +23,32 @@ t1.fmt('%Y-%m-%d %H:%M:%S') #2022-08-04 10:46:30
 t1.fmt('%Y-%m-%d %H:%M:%S.%f') #2022-08-04 10:46:30.100002
 
 Make str to Time(Weak AI Aided Programming WAIAP):
-
+t = Time('20120103') + Time('12:12:12.003')
 t1 = Time('2022')
 t1 = Time('2022-01-02 10:49:22.121233')
 t1 = Time('2022-01-01')
 
-#t1 = Time('March 2 1996')
-#t1 = Time('March,2,1996')
-#t1 = Time('March 2,1996')
+t1 = Time('March 2 1996')
+t1 = Time('March,2,1996')
+t1 = Time('March 2,1996')
 
-#t1 = Time('2 March,1996')
-#t1 = Time('2,March,1996')
-#t1 = Time('2 March 1996')
+t1 = Time('2 March,1996')
+t1 = Time('2,March,1996')
+t1 = Time('2 March 1996')
 
-#t1 = Time('Mar. 2,1996')
-#t1 = Time('Mar 2 1996')
-#t1 = Time('Mar. 2 1996')
-#t1 = Time('Mar.,2 1996')
-#t1 = Time('Mar.,2,1996')
+t1 = Time('Mar. 2,1996')
+t1 = Time('Mar 2 1996')
+t1 = Time('Mar. 2 1996')
+t1 = Time('Mar.,2 1996')
+t1 = Time('Mar.,2,1996')
 
-#t1 = Time('Mar2 1996')
-#t1 = Time('Mar.2 1996')
-#t1 = Time('2Mar. 1996')
+t1 = Time('Mar2 1996')
+t1 = Time('Mar.2 1996')
+t1 = Time('2Mar. 1996')
 
-#t1 = Time('1989/01/02 12:01:00.10002')
-#t1 = Time('1989.01.02 12:01:00.10002')
-#t1 = Time('1989 01 02 12:01:00.10002')
+t1 = Time('1989/01/02 12:01:00.10002')
+t1 = Time('1989.01.02 12:01:00.10002')
+t1 = Time('1989 01 02 12:01:00.10002')
 
 Because the USA and England's time different,we have to use US/us or EN/en prefix to help the class.
 Maybe all of you think this is not difficult.
@@ -65,11 +56,11 @@ But when you design it in the dark road, it is so hard and full of pain.
 
 It is very hard to choose from NLP or RegEx.
 
-#t1 = Time('us01 02 1980 12:00:00.10002')
-#t1 = Time('en01 02 1980 12:00:00.10002')
+t1 = Time('us01 02 1980 12:00:00.10002')
+t1 = Time('en01 02 1980 12:00:00.10002')
 
-#t1 = Time('en01/02/1980 12:00:00.10002')
-#t1 = Time('us01/02/1980 12:00:00.10002')
+t1 = Time('en01/02/1980 12:00:00.10002')
+t1 = Time('us01/02/1980 12:00:00.10002')
 
 Get current watch time(Tt is the time from your watch) :
 t2 = Time('@') # 19208@02:48:21.6316211
@@ -78,7 +69,8 @@ t3 = Time('@-1')# -0@23:59:59.0000000
 default 19208 represent the days from utc 1970-01-01 00:00:00.0 to present.
 
 Here is the formula:
-Time('@imestamp') = 'D@H:M:S'
+#this design is very beatiful
+Time('@timestamp') = 'D@H:M:S'
 H:M:S show the time from pointer of the watch.
 Change watch time to seconds.
 
@@ -91,8 +83,8 @@ if you use it like this , it is more clear.
 Time('@12:23:24.23232')
 Time('@-12:23:24.23232')
 
-#Time('-1@12:23:24.23232')
-#Time('2@12:23:24.23232')
+Time('-1@12:23:24.23232')
+Time('2@12:23:24.23232')
 
 
 t1 = Time()
@@ -121,8 +113,10 @@ t1 + '3D' #add three days to t1
 t1 + '3H' #add three hours to t1
 t1 + '3min' #add three minutes to t1
 t1 + '3S' #add three seconds to t1
+t1 + '3M' #add three month to t1
 
 '''
+EPOCH=0.0
 
 class Time:
     '''
@@ -130,7 +124,7 @@ class Time:
     '''
     def __init__(self, *args):
         self._Time__timestamp = time.time()
-        self.__epoch =0.0
+        self.__epoch = EPOCH
         if len(args) == 0 or args[0]=='':
             return
         if isinstance(args[0], float) or isinstance(args[0],int):
@@ -142,7 +136,20 @@ class Time:
         if isinstance(args[0], str):
             if '@' in args[0]:
                 self.__epoch=WULL
+
+                #Time('@')
+                if args[0].strip() == '@' :
+                    return
+
                 daystr = args[0].split('@')[0]
+                secstr = args[0].split('@')[1]
+
+
+                #Time('1@'), Time('-1@') 
+                if secstr == '' and daystr != '':
+                    self._Time__timestamp = float(daystr)*86400
+                    return
+
                 sign=1 
                 if '-' in daystr:
                     sign = -1
@@ -153,7 +160,6 @@ class Time:
                 timearr = clocktimestr.split(':')
                 tlen = len( timearr )
                 ttimestamp = 0.0
-
 
                 if ':' in clocktimestr:
                     if clocktimestr[0] == '-':
@@ -185,7 +191,9 @@ class Time:
                     self._Time__timestamp = abs(float(clocktimestr))*sign+abs(float(days))*86400*sign
             else:
                 fmt = '%Y-%m-%d %H:%M:%S.%f'
-                std_date_str = get_std_datestr(args[0])
+                std_date_str, self.__epoch = get_std_datestr(args[0])
+                if iswull(std_date_str):
+                    raise ValueError('The date str {0} format is not supported !'.format(args[0]) )
                 if '.' in std_date_str:
                     gsecond = std_date_str.split('.')[0]
                     lsecond = std_date_str.split('.')[1]
@@ -221,19 +229,28 @@ class Time:
 
     @property
     def year(self):
-        return dt.datetime.fromtimestamp(self._Time__timestamp).year
+        if iswull(self.__epoch):
+            return WULL
+        return int( self.fmt('%Y') )
 
     @property
     def month(self):
-        return dt.datetime.fromtimestamp(self._Time__timestamp).month
+        if iswull(self.__epoch):
+            return WULL
+        return  int( self.fmt('%m') )
 
     @property
     def day(self):
-        return dt.datetime.fromtimestamp(self._Time__timestamp).day
+        if iswull(self.__epoch):
+            return int( self.__str__().split('@')[0])
+        else:
+            return int( self.fmt('%d') )
 
     @property
     def week(self):
-        return dt.datetime.fromtimestamp(self._Time__timestamp).week
+        if iswull(self.__epoch):
+            return WULL
+        return int(self._Time__timestamp/86400 + 4 ) %7
 
     @classmethod
     def clock(cls):
@@ -246,8 +263,113 @@ class Time:
     @classmethod
     def process_time_ns(cls):
         return process_time_ns()
+        
+    @classmethod
+    def sleep(cls, second):
+        time.sleep(second)
+
+    @classmethod
+    def local(cls):
+        return time.ctime()
+
+    def isleapyear(self):
+        if iswull(self.__epoch):
+            return WULL
+
+        if self.year %400 == 0:
+            return True
+        if self.year %100 !=0 and self.year %4 == 0:
+            return True
+        return False
+
+    def add_n_month(self, n):
+        year = self.year
+        month = self.month
+        day = self.day
+        DAY = day
+        isleap = self.isleapyear()
+
+        for i in range(n):
+            if month == 12:
+                month = 1
+                year = year + 1
+            else:
+                month = month + 1
+
+            if month == 1 or month == 3 or month == 7 or month == 8 or month == 10 or month ==12 :
+                day = DAY
+            elif month == 4 or month == 6 or month == 9 or month == 11:
+                if DAY == 31:
+                    day = 30
+            if month == 2:
+                if leapyear(year):
+                    if DAY >=29:
+                        day = 29
+
+                elif DAY >= 29:
+                    day = 28
+        return Time( str(year).rjust(4,'0')+'-'+str(month).rjust(2,'0') + '-' + str(day).rjust(2,'0') +' ' + self.fmt('%H:%M:%S.%f') )
+
+    def sub_n_month(self, n):
+        year = self.year
+        month = self.month
+        day = self.day
+        DAY = day
+        isleap = self.isleapyear()
+
+        for i in range(n):
+            if month == 1:
+                month = 12 
+                year = year - 1
+            else:
+                month = month - 1
+
+            if month == 1 or month == 3 or month == 7 or month == 8 or month == 10 or month == 12:
+                day = DAY
+            elif month == 4 or month == 6 or month == 9 or month == 11:
+                if DAY == 31:
+                    day = 30
+            if month == 2:
+                if leapyear(year):
+                    if DAY >=29:
+                        day = 29 
+                elif DAY >= 29:
+                    day = 28
+        return Time( str(year).rjust(4,'0')+'-'+str(month).rjust(2,'0') + '-' + str(day).rjust(2,'0') +' ' + self.fmt('%H:%M:%S.%f') )
+
+    def monthlastday(self):
+        year = self.year
+        month = self.month
+        day = self.day
+        isleap = self.isleapyear()
+
+        if month == 1 or month == 3 or month == 7 or month == 8 or month == 10 or month == 12:
+            day = 31
+        elif month == 4 or month == 6 or month == 9 or month == 11:
+            day = 30
+        if month ==2 :
+            if isleap:
+                day = 29
+            else:
+                day = 28
+
+        return Time( str(year).rjust(4,'0')+'-'+str(month).rjust(2,'0') + '-' + str(day).rjust(2,'0') +' ' + self.fmt('%H:%M:%S.%f') )
+
+    def monthfirstday(self):
+        year = self.year
+        month = self.month
+        day = 1
+        isleap = self.isleapyear()
+        return Time( str(year).rjust(4,'0')+'-'+str(month).rjust(2,'0') + '-' + str(day).rjust(2,'0') +' ' + self.fmt('%H:%M:%S.%f') )
+
+    def daystartsecond(self):
+        return Time(self.fmt('%Y-%m-%d'))
+
+    def dayendsecond(self):
+        return Time( (self+'1D').fmt('%Y-%m-%d') )+Time('@-1')
 
     def timezone(self, utc):
+        utc=utc.upper()
         hours = int(utc.replace('UTC', ''))
         if not iswull(self.__epoch):
             return Time(self._Time__timestamp + hours * 60 * 60)
@@ -267,15 +389,6 @@ class Time:
         else:
             return dtime.strftime(fmt)
 
-    def monthdiff(self, other):
-        return (self.year - other.year) * 12 + (self.month - other.year)
-
-    def yeardiff(self, other):
-        return self.year - other.year
-
-    def daydiff(self, other):
-        return (self - other) / 60.0 / 60.0 / 24.0
-
     def __repr__(self):
         if iswull(self.epoch):
             day = ( self._Time__timestamp/86400 )
@@ -287,8 +400,10 @@ class Time:
             minute = ( (self._Time__timestamp%86400)%3600 )/60
             minutestr = '{:0>2d}'.format(int(minute))
 
-            second = round (  ( (self._Time__timestamp%86400)%3600 ) % 60 , 7 )
-            secondstr =  '{:0>10.7f}'.format(second)
+            second = ( (self._Time__timestamp%86400)%3600 ) % 60 
+
+            secondstr =  '{:0>12.9f}'.format(second)
+
             if self._Time__timestamp <0 and abs(self._Time__timestamp)<86400:
                 return '<Time:' + '-0' +'@'+ hourstr + ':' + minutestr +':' +secondstr+'>'
             return '<Time:' + daystr +'@'+ hourstr + ':' + minutestr +':' +secondstr+'>'
@@ -306,8 +421,9 @@ class Time:
             minute = ( (self._Time__timestamp%86400)%3600 )/60
             minutestr = '{:0>2d}'.format(int(minute))
 
-            second = round (  ( (self._Time__timestamp%86400)%3600 ) % 60 , 7 )
-            secondstr =  '{:0>10.7f}'.format(second)
+            second =  ( (self._Time__timestamp%86400)%3600 ) % 60 
+            
+            secondstr =  '{:0>12.9f}'.format(second)
 
             if self._Time__timestamp <0 and abs(self._Time__timestamp)<86400:
                 return '-0' +'@'+ hourstr + ':' + minutestr +':' +secondstr
@@ -348,9 +464,18 @@ class Time:
                         else :
                             return Time('@'+str(self._Time__timestamp+ float(other.strip('S') )))
 
+                    if 'M' in other:
+                        if not iswull( self.__epoch ):
+                            month = int( other.strip('M') )
+                            monthfloat = float( other.strip('M') )
+                            if monthfloat - month > 0:
+                                raise ValueError('add or sub Month should use int type')
+                            return self.add_n_month( month )
+                        else:
+                            raise ValueError("Time('@') is can't add month.")
                 if isinstance(other, Time):
                     if not iswull(self.__epoch) and not iswull(other.epoch):
-                        raise ValueError('All of the two time epoch is wull')
+                        raise ValueError('None of the two time epoch is wull')
 
                     elif iswull(self.__epoch) and not iswull(other.epoch): 
                         new_timestamp = self._Time__timestamp + other.timestamp
@@ -362,7 +487,7 @@ class Time:
                         new_timestamp = self._Time__timestamp + other.timestamp
                         return Time('@'+str(new_timestamp))
                 else:
-                    raise TypeError("Time isinstance can't plus the type which is not str or int or float")
+                    raise TypeError("Time isinstance can't plus the type which is not str|int|float|Time")
 
         return Time(new_timestamp)
 
@@ -396,7 +521,18 @@ class Time:
                 if 'S' in other:
                     return Time( self._Time__timestamp- float(other.strip('S') )  )
 
-        raise TypeError('Time instance can only sub Time|int|float instance.')
+                if 'M' in other:
+                    if not iswull( self.__epoch ):
+                        month = int( other.strip('M') )
+                        monthfloat = float( other.strip('M') )
+
+                        if monthfloat - month > 0:
+                            raise ValueError('add or sub Month should use int type')
+                        return self.sub_n_month( month )
+                    else:
+                        raise ValueError("Time('@') is can't sub month.")
+
+        raise TypeError('Time instance can only sub Time|int|float|str instance.')
 
     def __getitem__(self, key):
         if key == 'timestamp':
@@ -419,3 +555,26 @@ class Time:
                     raise TypeError('Time format is not ok!')
             else:
                 raise ValueError('Only datetime or timestamp can be accepted!')
+
+class Timeseries:
+    '''
+        Time init
+    '''
+    def __init__(self, *args):
+        self._Timeseries_list = []
+        self._Timeseries_start_time = WULL
+        self._Timeseries_length = 0
+        self._Timeseries_freq = WULL
+
+    @property
+    def length(self):
+        return self._Timeseries_length
+
+    @property
+    def starttime(self):
+        return self._Timeseries_start_time
+
+    @property
+    def freq(self):
+        return self._Timeseries_freq
+    

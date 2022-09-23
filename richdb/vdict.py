@@ -1,14 +1,11 @@
 #-*-encoding=utf8-*-
 import os, logging, re, copy, time
 import sys
-from os.path import dirname, abspath
-sys.path.append( dirname( abspath( __file__ ) ) )
 
 from rich.console import Console
 from rich.table import Table
 from datetime import datetime
 from functools import wraps
-#from runlog import log
 from pathlib import Path
 from threading import Thread, Lock
 lock = Lock()
@@ -16,7 +13,6 @@ v_columns_names = {}
 
 class LineException(Exception):
     pass
-
 
 class vdict:
 
@@ -90,7 +86,6 @@ class vdict:
         return self
 
     def __len__(self):
-        print(self._vdict__list)
         return max(len(self._vdict__list), len(v_columns_names[self._vdict__name]))
 
     def __getattr__(self, name):
@@ -151,7 +146,6 @@ class vdict:
 
     def to_dict(self):
         d = {}
-        print(v_columns_names)
         for i in v_columns_names[self._vdict__name]:
             d[i] = self.__getitem__(i)
 

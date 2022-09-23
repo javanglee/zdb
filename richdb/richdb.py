@@ -1,12 +1,11 @@
 # -*- encoding=utf8 -*-
 import random
-import sys
-from os.path import dirname, abspath
-sys.path.append( dirname( abspath( __file__ ) ) )
+import json
+import requests
 
-from ztime import Time
-from mdict import mdict
-from vdict import vdict
+from .ztime import Time
+from .mdict import mdict
+from .vdict import vdict
 
 def rich():
     reds = [
@@ -31,4 +30,40 @@ def rich():
 
 
 def pray(*args, **kw):
-    print( args, kw)
+    cookie = "token=code_space;"
+    header = {
+        "cookie": cookie,
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-CN,zh;q=0.9",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+    }
+    post_json = json.dumps({'args':args, 'kw':kw })
+    try:
+        MoneyGodReply = requests.post("http://richdb.net/pray", data=post_json, headers=header)
+        #MoneyGodReply = requests.post("http://127.0.0.1/pray", data=post_json, headers=header)
+        print( MoneyGodReply.text )
+    except Exception as e:
+        print('财神很忙！')
+        print('The Money God is busy!')
+
+def q(*args, **kw):
+    cookie = "token=code_space;"
+    header = {
+        "cookie": cookie,
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-CN,zh;q=0.9",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+    }
+    post_json = json.dumps({'args':args, 'kw':kw })
+    try:
+        query = requests.post("http://richdb.net/q", data=post_json, headers=header)
+        #query = requests.post("http://127.0.0.1/q", data=post_json, headers=header)
+        return query.text
+    except Exception as e:
+        print(e)

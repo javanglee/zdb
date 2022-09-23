@@ -5,7 +5,7 @@ with open("README.md", "r", encoding='utf8') as fh:
 
 setup(
     name="richdb",
-    version="0.1.0",
+    version="0.1.2",
     author="javang.lee",
     author_email="walkbob@sina.com",
     description="Time,Timeseries,vdict(combine the benefits of list and dict) is designed for Timeseries problem analysis",
@@ -21,7 +21,7 @@ setup(
 
     packages=find_packages(),
 
-    py_modules=['richdb','vdict','runlog','ztime','version'],
+    py_modules=['richdb','vdict','ztime','version','wull'],
 
     classifiers=[
         "Programming Language :: Python :: 3",
