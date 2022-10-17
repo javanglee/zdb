@@ -6,6 +6,8 @@ import requests
 from .ztime import Time
 from .mdict import mdict
 from .vdict import vdict
+from .version import __version__
+from .vdict import vdict
 
 def rich():
     reds = [

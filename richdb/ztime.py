@@ -122,7 +122,7 @@ class Time:
     '''
         Time init
     '''
-    def __init__(self, *args):
+    def __init__(self, *args, fmt=WULL):
         self._Time__timestamp = time.time()
         self.__epoch = EPOCH
         if len(args) == 0 or args[0]=='':
@@ -452,6 +452,18 @@ class Time:
                         else:
                             return Time('@'+str(self._Time__timestamp+ float(other.strip('H') )*60*60))
 
+                    if 'Q' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('Q') )*15*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('Q') )*15*60))
+
+                    if 'dong' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('dong') )*2*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('dong') )*2*60))
+
                     if 'min' in other:
                         if not iswull( self.__epoch ):
                             return Time( self._Time__timestamp+ float(other.strip('min') )*60  )
@@ -473,6 +485,59 @@ class Time:
                             return self.add_n_month( month )
                         else:
                             raise ValueError("Time('@') is can't add month.")
+
+                    if '秒' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('秒') )  )
+                        else :
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('秒') )))
+
+                    if '分' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('分') )*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('分') )*60))
+
+                    if '时' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('时') )*60*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('时') )*60*60))
+
+                    if '刻' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('刻') )*15*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('刻') )*15*60))
+
+                    if '东' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('东') )*2*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('东') )*2*60))
+
+                    if '时辰' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('时辰') )*2*60*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('时辰') )*2*60*60))
+
+                    if '天' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('天') )*24*60*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('天') )*24*60*60))
+
+                    if '月' in other:
+                        if not iswull( self.__epoch ):
+                            month = int( other.strip('月') )
+                            monthfloat = float( other.strip('月') )
+                            if monthfloat - month > 0:
+                                raise ValueError('add or sub Month should use int type')
+                            return self.add_n_month( month )
+                        else:
+                            raise ValueError("Time('@') is can't add month.")
+
                 if isinstance(other, Time):
                     if not iswull(self.__epoch) and not iswull(other.epoch):
                         raise ValueError('None of the two time epoch is wull')
@@ -516,6 +581,17 @@ class Time:
                     return Time( self._Time__timestamp- float(other.strip('D') )*24*60*60 )
                 if 'H' in other:
                     return Time( self._Time__timestamp- float(other.strip('H') )*60*60  )
+                if 'Q' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('Q') )*15*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('Q') )*15*60))
+                if 'dong' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('dong') )*2*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('dong') )*2*60))
+
                 if 'min' in other:
                     return Time( self._Time__timestamp- float(other.strip('min') )*60  )
                 if 'S' in other:
@@ -531,6 +607,58 @@ class Time:
                         return self.sub_n_month( month )
                     else:
                         raise ValueError("Time('@') is can't sub month.")
+
+                if '秒' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('秒') )  )
+                    else :
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('秒') )))
+
+                if '分' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('分') )*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('分') )*60))
+
+                if '时' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('时') )*60*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('时') )*60*60))
+
+                if '刻' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('刻') )*15*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('刻') )*15*60))
+
+                if '东' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('东') )*2*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('东') )*2*60))
+
+                if '时辰' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('时辰') )*2*60*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('时辰') )*2*60*60))
+
+                if '天' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('天') )*24*60*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('天') )*24*60*60))
+
+                if '月' in other:
+                    if not iswull( self.__epoch ):
+                        month = int( other.strip('月') )
+                        monthfloat = float( other.strip('月') )
+                        if monthfloat - month > 0:
+                            raise ValueError('add or sub Month should use int type')
+                        return self.sub_n_month( month )
+                    else:
+                        raise ValueError("Time('@') is can't add month.")
 
         raise TypeError('Time instance can only sub Time|int|float|str instance.')
 
@@ -556,25 +684,117 @@ class Time:
             else:
                 raise ValueError('Only datetime or timestamp can be accepted!')
 
-class Timeseries:
+    def __eq__(self, other):
+        if isinstance(other, float):
+            if self.timestamp == other:
+                return True
+        if isinstance(other, int):
+            if self.timestamp == float(other):
+                return True
+        if isinstance(other, str):
+            if self.timestamp == Time(other).timestamp:
+                return True
+        if isinstance(other, Time):
+            if self.timestamp == other.timestamp and other.epoch == self.epoch:
+                return True
+        return False
+
+    def __ne__(self, other):
+        if isinstance(other, float):
+            if self.timestamp != other:
+                return True
+        if isinstance(other, int):
+            if self.timestamp != float(other):
+                return True
+        if isinstance(other, str):
+            if self.timestamp != Time(other).timestamp:
+                return True
+        if isinstance(other, Time):
+            if self.timestamp != other.timestamp and other.epoch == self.epoch:
+                return True
+        return False
+
+    def __lt__(self, other):
+        if isinstance(other, float):
+            if self.timestamp < other:
+                return True
+        if isinstance(other, int):
+            if self.timestamp < float(other):
+                return True
+        if isinstance(other, str):
+            if self.timestamp < Time(other).timestamp:
+                return True
+        if isinstance(other, Time):
+            if self.timestamp < other.timestamp and other.epoch == self.epoch:
+                return True
+        return False
+
+    def __gt__(self, other):
+        if isinstance(other, float):
+            if self.timestamp > other:
+                return True
+        if isinstance(other, int):
+            if self.timestamp > float(other):
+                return True
+        if isinstance(other, str):
+            if self.timestamp > Time(other).timestamp:
+                return True
+        if isinstance(other, Time):
+            if self.timestamp > other.timestamp and other.epoch == self.epoch:
+                return True
+        return False
+
+    def __le__(self, other):
+        if isinstance(other, float):
+            if self.timestamp <= other:
+                return True
+        if isinstance(other, int):
+            if self.timestamp <= float(other):
+                return True
+        if isinstance(other, str):
+            if self.timestamp <= Time(other).timestamp:
+                return True
+        if isinstance(other, Time):
+            if self.timestamp <= other.timestamp and other.epoch == self.epoch:
+                return True
+        return False
+
+    def __ge__(self, other):
+        if isinstance(other, float):
+            if self.timestamp >= other:
+                return True
+        if isinstance(other, int):
+            if self.timestamp >= float(other):
+                return True
+        if isinstance(other, str):
+            if self.timestamp >= Time(other).timestamp:
+                return True
+        if isinstance(other, Time):
+            if self.timestamp >= other.timestamp and other.epoch == self.epoch:
+                return True
+        return False
+
+    def __hash__(self):
+        return hash(id(self))
+
+    def __bool__(self):
+        return True
+
+    #orange step standard    
+    @property
+    def defaultstep(self):
+        return '1D'
+
+def orange(start, end, step=None):
+    step = step if step is not None else start.defaultstep
+    while( start < end ):
+        yield start
+        start = start + step
+
+class Times:
     '''
-        Time init
+        Times 
     '''
-    def __init__(self, *args):
-        self._Timeseries_list = []
-        self._Timeseries_start_time = WULL
-        self._Timeseries_length = 0
-        self._Timeseries_freq = WULL
-
-    @property
-    def length(self):
-        return self._Timeseries_length
-
-    @property
-    def starttime(self):
-        return self._Timeseries_start_time
-
-    @property
-    def freq(self):
-        return self._Timeseries_freq
-    
+    @classmethod
+    def timelist(cls, starttime, endtime, interval=None, freq='1D'):
+        pass

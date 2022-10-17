@@ -2,8 +2,10 @@
 import sys
 
 #from .richdb import rich, pray, Time, mdict, wull, WULL
-from .ztime import Time
+from .ztime import Time,orange
 from .richdb import rich, pray, q
 from .mdict import mdict
 from .wull import wull, WULL, iswull
-__all__ = ('rich', 'Time', 'wull', 'WULL', 'mdict', 'pray', 'iswull', 'q')
+from .vdict import vdict
+from .version import __version__
+__all__ = ('rich', 'Time', 'wull', 'WULL', 'mdict', 'pray', 'iswull', 'q', 'vdict', 'orange', '__version__')
