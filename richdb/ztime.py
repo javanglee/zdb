@@ -786,10 +786,17 @@ class Time:
         return '1D'
 
 def orange(start, end, step=None):
-    step = step if step is not None else start.defaultstep
+    defaultstep = 1 if not hasattr(start, 'defaultstep') else start.defaultstep
+    step = step if step is not None else defaultstep
+    
     while( start < end ):
         yield start
         start = start + step
+
+def fmt(l, fmt='%Y-%m-%d %H:%M:%S'):
+    for i in l:
+        yield i.fmt(fmt)
+
 
 class Times:
     '''
