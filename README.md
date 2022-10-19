@@ -88,8 +88,7 @@ this package contains another design method.Except the group theory , Fisrt Hand
 >>> t.timestamp
 1643296466.0483491
 >>> t.fmt('%Y-%m-%d %H:%M:%S')
-1666164148.2295296
-
+<Time:2022-10-19 07:22:28.2295296>
 ```
 
 ```
@@ -111,6 +110,24 @@ this package contains another design method.Except the group theory , Fisrt Hand
 >>> ((t2-t)+'655D').timestamp
 -26548.229529619217
 #这个时间戳在手表上显示的时间刚好是 16:37:31.770470381
+
+Here is the formula:
+#this design is very beatiful
+Time('@timestamp') = 'D@H:M:S'
+H:M:S show the time from pointer of the watch.
+Change watch time to seconds.
+
+timestamp = D*86400+(H*60*60+M*60+S)
+
+Time('@-timestamp') = '-D@H:M:S'
+timestamp = -D*86400-86400+(H*60*60+M*60+S)
+
+if you use it like this , it is more clear.
+Time('@12:23:24.23232')
+Time('@-12:23:24.23232')
+
+Time('-1@12:23:24.23232')
+Time('2@12:23:24.23232')
 
 #我们经常需要处理一个时间列表,当然对于任何一个object只要实现了 __add__ 和 defaultstep 两个函数,均可以使用orange
 #时间类Time的defaultstep 是 '1D', 也可以使用'3M'，如果一个类实现了加法，但是没有实现defaultstep函数，那么默认增量是1
