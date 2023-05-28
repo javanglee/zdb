@@ -56,7 +56,15 @@ class mdict():
 
 
     def __repr__(self):
-        return str( self.__dict ) + str( self.__mirror_dict)
+
+        mstr = '{'
+        for i in self.__dict:
+            mstr = mstr + str(i) +'<->'+str( self.__dict[i]) +','
+            
+        l = list( mstr )
+        l[-1] = '}'
+        mstr = ''.join(l)
+        return mstr
 
     def __str__(self):
         return str(self.__dict) + str( self.__mirror_dict )

@@ -45,7 +45,6 @@ def pray(*args, **kw):
     post_json = json.dumps({'args':args, 'kw':kw })
     try:
         MoneyGodReply = requests.post("http://richdb.net/pray", data=post_json, headers=header)
-        #MoneyGodReply = requests.post("http://127.0.0.1/pray", data=post_json, headers=header)
         print( MoneyGodReply.text )
     except Exception as e:
         print('财神很忙！')

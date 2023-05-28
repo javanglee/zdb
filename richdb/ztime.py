@@ -128,12 +128,25 @@ class Time:
         if len(args) == 0 or args[0]=='':
             return
         if isinstance(args[0], float) or isinstance(args[0],int):
-            self._Time__timestamp = float(args[0])
+            self._Time__timestamp = round( float(args[0]), 6)
             return
         if isinstance(args[0], datetime):
             self._Time__timestamp = args[0].timestamp()
             return
         if isinstance(args[0], str):
+            if not iswull(fmt):
+                fsecond = float( '0.'+args[0].split('.')[-1] )
+                datestr = '.'.join(args[0].split('.')[0:-1])
+                fmt_without_f = '.'.join(fmt.split('.')[0:-1])
+                dtime = dt.datetime.strptime( datestr, fmt_without_f)
+                epoch = dt.datetime(1970, 1, 1)
+                stamp_seconds = (dtime - epoch).total_seconds()
+                if '.%f' in fmt:
+                    self._Time__timestamp = round(stamp_seconds+fsecond,6)
+                else:
+                    self._Time__timestamp = stamp_seconds
+                return
+
             if '@' in args[0]:
                 self.__epoch=WULL
 
@@ -211,7 +224,7 @@ class Time:
                 dtime = dt.datetime.strptime(gsecond, gfmt)
                 epoch = dt.datetime(1970, 1, 1)
                 stamp_seconds = (dtime - epoch).total_seconds()
-                self._Time__timestamp = stamp_seconds + fsecond
+                self._Time__timestamp = round( stamp_seconds + fsecond , 6)
         else:
             raise ValueError("Time(args)'s args can only be float timestamp or str format or datetime.datetime")
 
@@ -797,6 +810,8 @@ def fmt(l, fmt='%Y-%m-%d %H:%M:%S'):
     for i in l:
         yield i.fmt(fmt)
 
+class Timeslice():
+    pass
 
 class Times:
     '''

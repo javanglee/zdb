@@ -92,7 +92,7 @@ class vdict:
         pass
 
     def __repr__(self):
-        return str(self.to_dict())
+        return '<vdict:'+str(self.to_dict())+'>'
 
     def __getitem__(self, key):
         if isinstance(key, str):
@@ -108,6 +108,9 @@ class vdict:
                     return self._vdict__list[key]
             if key < 0:
                 return self._vdict__list[(len(self._vdict__list) + key - 1)]
+
+        if isinstance(key, slice):
+            raise TyperError('slice is not supported!')
 
     def __setitem__(self, key, value):
         vlen = len(v_columns_names[self._vdict__name])
@@ -133,6 +136,7 @@ class vdict:
                 self._vdict__list[key] = value
 
     def __getslice__(self, i, j):
+        print( self._vdict__list[i:j] )
         return self._vdict__list[i:j]
 
     def __setslice__(self, i, j, value):

@@ -53,7 +53,7 @@ class wull:
         print("You'd better call me Handsome Father.\n你甚至都不愿意叫我一声帅父。")
 
     def __repr__(self):
-        return '@'
+        return '<wull:@>'
 
     def __str__(self):
         return '@'
@@ -191,7 +191,7 @@ class wull:
             return True
 
     def __lt__(self, other):
-        return True
+        return True 
 
     def __le__(self, other):
         return True
@@ -203,7 +203,10 @@ class wull:
             return True
 
     def __gt__(self, other):
-        return False
+        if isinstance(other, wull):
+            return True
+        else:
+            return False
 
     def __ge__(self, other):
         if id(self) == id(other):
@@ -214,10 +217,17 @@ class wull:
     def __del__(self):
         pass
 
+    def __hash__(self):
+        return hash(id(self))
+
+    def __bool__(self):
+        return True
+
 def iswull(element):
     if isinstance(element, wull):
         return True
     return False
+    
 WULL = wull()
 
 if __name__ == '__main__':
