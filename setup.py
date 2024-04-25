@@ -5,7 +5,7 @@ with open("README.md", "r", encoding='utf8') as fh:
 
 setup(
     name="richdb",
-    version="0.1.5",
+    version="0.1.6",
     author="javang.lee",
     author_email="walkbob@sina.com",
     description="Time,Timeseries,vdict(combine the benefits of list and dict) is designed for Timeseries problem analysis",

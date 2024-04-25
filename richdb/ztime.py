@@ -477,6 +477,13 @@ class Time:
                         else:
                             return Time('@'+str(self._Time__timestamp+ float(other.strip('dong') )*2*60))
 
+                    if 'lei' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('lei') )*12  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('lei') )*12))
+
+
                     if 'min' in other:
                         if not iswull( self.__epoch ):
                             return Time( self._Time__timestamp+ float(other.strip('min') )*60  )
@@ -528,6 +535,12 @@ class Time:
                             return Time( self._Time__timestamp+ float(other.strip('东') )*2*60  )
                         else:
                             return Time('@'+str(self._Time__timestamp+ float(other.strip('东') )*2*60))
+
+                    if '雷' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('雷') )*12  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('雷') )*12))
 
                     if '时辰' in other:
                         if not iswull( self.__epoch ):
@@ -605,6 +618,12 @@ class Time:
                     else:
                         return Time('@'+str(self._Time__timestamp - float(other.strip('dong') )*2*60))
 
+                if 'lei' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp- float(other.strip('lei') )*12  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp- float(other.strip('lei') )*12))
+
                 if 'min' in other:
                     return Time( self._Time__timestamp- float(other.strip('min') )*60  )
                 if 'S' in other:
@@ -650,6 +669,13 @@ class Time:
                         return Time( self._Time__timestamp - float(other.strip('东') )*2*60  )
                     else:
                         return Time('@'+str(self._Time__timestamp - float(other.strip('东') )*2*60))
+
+                if '雷' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp- float(other.strip('雷') )*12  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp- float(other.strip('雷') )*12))
+
 
                 if '时辰' in other:
                     if not iswull( self.__epoch ):
