@@ -554,6 +554,12 @@ class Time:
                         else:
                             return Time('@'+str(self._Time__timestamp+ float(other.strip('天') )*24*60*60))
 
+                    if '日' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('日') )*24*60*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('日') )*24*60*60))
+
                     if '月' in other:
                         if not iswull( self.__epoch ):
                             month = int( other.strip('月') )
