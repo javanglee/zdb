@@ -117,7 +117,7 @@ t1 + '3M' #add three month to t1
 
 '''
 EPOCH=0.0
-
+ACCURACY=6
 class Time:
     '''
         Time init
@@ -128,7 +128,7 @@ class Time:
         if len(args) == 0 or args[0]=='':
             return
         if isinstance(args[0], float) or isinstance(args[0],int):
-            self._Time__timestamp = round( float(args[0]), 6)
+            self._Time__timestamp = round( float(args[0]), ACCURACY)
             return
         if isinstance(args[0], datetime):
             self._Time__timestamp = args[0].timestamp()
@@ -142,7 +142,7 @@ class Time:
                 epoch = dt.datetime(1970, 1, 1)
                 stamp_seconds = (dtime - epoch).total_seconds()
                 if '.%f' in fmt:
-                    self._Time__timestamp = round(stamp_seconds+fsecond,6)
+                    self._Time__timestamp = round(stamp_seconds+fsecond, ACCURACY)
                 else:
                     self._Time__timestamp = stamp_seconds
                 return
@@ -224,7 +224,7 @@ class Time:
                 dtime = dt.datetime.strptime(gsecond, gfmt)
                 epoch = dt.datetime(1970, 1, 1)
                 stamp_seconds = (dtime - epoch).total_seconds()
-                self._Time__timestamp = round( stamp_seconds + fsecond , 6)
+                self._Time__timestamp = round( stamp_seconds + fsecond , ACCURACY)
         else:
             raise ValueError("Time(args)'s args can only be float timestamp or str format or datetime.datetime")
 
@@ -309,7 +309,7 @@ class Time:
             else:
                 month = month + 1
 
-            if month == 1 or month == 3 or month == 7 or month == 8 or month == 10 or month ==12 :
+            if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month ==12 :
                 day = DAY
             elif month == 4 or month == 6 or month == 9 or month == 11:
                 if DAY == 31:
@@ -337,7 +337,7 @@ class Time:
             else:
                 month = month - 1
 
-            if month == 1 or month == 3 or month == 7 or month == 8 or month == 10 or month == 12:
+            if month == 1 or month == 3 or month==5 or month == 7 or month == 8 or month == 10 or month == 12:
                 day = DAY
             elif month == 4 or month == 6 or month == 9 or month == 11:
                 if DAY == 31:
@@ -356,7 +356,7 @@ class Time:
         day = self.day
         isleap = self.isleapyear()
 
-        if month == 1 or month == 3 or month == 7 or month == 8 or month == 10 or month == 12:
+        if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
             day = 31
         elif month == 4 or month == 6 or month == 9 or month == 11:
             day = 30
@@ -518,6 +518,12 @@ class Time:
                         else:
                             return Time('@'+str(self._Time__timestamp+ float(other.strip('分') )*60))
 
+                    if '时辰' in other:
+                        if not iswull( self.__epoch ):
+                            return Time( self._Time__timestamp+ float(other.strip('时辰') )*2*60*60  )
+                        else:
+                            return Time('@'+str(self._Time__timestamp+ float(other.strip('时辰') )*2*60*60))
+
                     if '时' in other:
                         if not iswull( self.__epoch ):
                             return Time( self._Time__timestamp+ float(other.strip('时') )*60*60  )
@@ -541,12 +547,6 @@ class Time:
                             return Time( self._Time__timestamp+ float(other.strip('雷') )*12  )
                         else:
                             return Time('@'+str(self._Time__timestamp+ float(other.strip('雷') )*12))
-
-                    if '时辰' in other:
-                        if not iswull( self.__epoch ):
-                            return Time( self._Time__timestamp+ float(other.strip('时辰') )*2*60*60  )
-                        else:
-                            return Time('@'+str(self._Time__timestamp+ float(other.strip('时辰') )*2*60*60))
 
                     if '天' in other:
                         if not iswull( self.__epoch ):
@@ -658,6 +658,12 @@ class Time:
                     else:
                         return Time('@'+str(self._Time__timestamp - float(other.strip('分') )*60))
 
+                if '时辰' in other:
+                    if not iswull( self.__epoch ):
+                        return Time( self._Time__timestamp - float(other.strip('时辰') )*2*60*60  )
+                    else:
+                        return Time('@'+str(self._Time__timestamp - float(other.strip('时辰') )*2*60*60))
+                        
                 if '时' in other:
                     if not iswull( self.__epoch ):
                         return Time( self._Time__timestamp - float(other.strip('时') )*60*60  )
@@ -681,13 +687,6 @@ class Time:
                         return Time( self._Time__timestamp- float(other.strip('雷') )*12  )
                     else:
                         return Time('@'+str(self._Time__timestamp- float(other.strip('雷') )*12))
-
-
-                if '时辰' in other:
-                    if not iswull( self.__epoch ):
-                        return Time( self._Time__timestamp - float(other.strip('时辰') )*2*60*60  )
-                    else:
-                        return Time('@'+str(self._Time__timestamp - float(other.strip('时辰') )*2*60*60))
 
                 if '天' in other:
                     if not iswull( self.__epoch ):
